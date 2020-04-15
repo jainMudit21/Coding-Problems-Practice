@@ -1,0 +1,68 @@
+class Solution {
+    public int numTeams(int[] rating) {
+        int count = 0;
+        
+        for(int i = 0; i < rating.length; i++) {
+            int one = rating[i];
+            for(int j = i+1; j < rating.length; j++) {
+                if(rating[j] <= one) {
+                    continue;
+                }
+                int two = rating[j];
+                for(int k = j+1; k < rating.length; k++) {
+                    if(rating[k] <= two) {
+                        continue;
+                    }
+                    count++;
+                }
+            }
+        }
+        
+        for(int i = 0; i < rating.length; i++) {
+            int one = rating[i];
+            for(int j = i+1; j < rating.length; j++) {
+                if(rating[j] > one) {
+                    continue;
+                }
+                int two = rating[j];
+                for(int k = j+1; k < rating.length; k++) {
+                    if(rating[k] > two) {
+                        continue;
+                    }
+                    count++;
+                }
+            }
+        }
+        
+        return count;
+    }
+}
+
+
+//OPTIMIZED SOLUTION
+
+class Solution {
+    public int numTeams(int[] rating) {
+        int[] greater = new int[rating.length];
+        int[] smaller = new int[rating.length];
+        
+        for(int i=0;i<rating.length;i++){
+            for(int j=i+1;j<rating.length;j++){
+                if(rating[j]>rating[i]) greater[i]++;
+                if(rating[j]<rating[i]) smaller[i]++;
+            }
+        }
+        int count = 0;
+        for(int i=0;i<rating.length;i++){
+            for(int j=i+1;j<rating.length;j++){
+                if(rating[j]>rating[i]) count+=greater[j];
+                if(rating[j]<rating[i]) count+=smaller[j];
+            }
+        }
+        return count;
+    }
+}
+
+//basically we are storing how many elements are bigger or smaller than the current element and then use that data for finding how many 3rd elements can be there.
+//find for every j greater or smaller than i, how many elements are there and store at ith index.
+//after finding consider ith element as first element and jth element as second element now find count at jth index.
