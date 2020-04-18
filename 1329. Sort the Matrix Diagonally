@@ -1,0 +1,55 @@
+class Solution {
+    public int[][] diagonalSort(int[][] mat) {
+        
+        int i = 0;
+        for(int j = 0; j < mat[i].length; j++) {
+            ArrayList<Integer> arr = new ArrayList<>();
+            int row = i; int col = j;
+            while(row < mat.length && col < mat[i].length) {
+                arr.add(mat[row][col]);
+                row++;
+                col++;
+            }
+            
+            Collections.sort(arr);
+            row = i;
+            col = j;
+            int count = 0;
+            while(row < mat.length && col < mat[i].length) {
+                mat[row][col] = arr.get(count);
+                row++;
+                col++;
+                count++;
+            }
+            
+            
+        }
+        
+        int j = 0;
+        for(i = 1; i < mat.length; i++) {
+            ArrayList<Integer> arr = new ArrayList<>();
+            int row = i; int col = j;
+            while(row < mat.length && col < mat[i].length) {
+                arr.add(mat[row][col]);
+                row++;
+                col++;
+            }
+            
+            Collections.sort(arr);
+            row = i;
+            col = j;
+            int count = 0;
+            while(row < mat.length && col < mat[i].length) {
+                mat[row][col] = arr.get(count);
+                row++;
+                col++;
+                count++;
+            }
+        }
+        
+        // System.out.println(Arrays.toDeepString(mat));
+        
+        return mat;
+        
+    }
+}
