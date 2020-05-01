@@ -1,0 +1,21 @@
+class Solution {
+    public List<Integer> partitionLabels(String S) {
+        int[] last = new int[26];
+        for(int i = 0; i < S.length(); i++){
+            last[S.charAt(i) - 'a'] = i;
+        }
+        
+        int k = 0;
+        List<Integer> result = new LinkedList<>();
+        while(k < S.length()){
+            int lastIndex = last[S.charAt(k)-'a'];
+            int start = k;
+            while(k <= lastIndex){
+                lastIndex = Math.max(lastIndex, last[S.charAt(k)-'a']);
+                k++;
+            }
+            result.add(lastIndex - start + 1);
+        }
+        return result;
+    }
+}
