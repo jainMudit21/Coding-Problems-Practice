@@ -1,0 +1,45 @@
+class Solution {
+    public int maxProfit(int[] prices) {
+        
+        if(prices.length==0) {
+            return 0;
+        }
+        
+        int start = prices[0];
+        int max = 0;
+        int supermax = 0;
+        
+        for(int i = 1; i < prices.length; i++) {
+            
+            if(prices[i] > start) {
+                
+                int temp = prices[i] - start;
+                if(temp > max) {
+                    max = temp;
+                }else {
+                    supermax += max;
+                    max = 0;
+                    start = prices[i];
+                }
+                
+            }else {
+                supermax += max;
+                max = 0;
+                start = prices[i];
+            }
+            
+        }
+        
+        supermax += max;
+        
+        return supermax;
+    
+    }
+}
+
+//Consider start element as first element and then traverse the array. While traversing, if the element is less than or equal
+//to start element then book the previous profit(if any) and update the start element where as if the element is greater than
+//start element then there will be two choices: 1. if profit is greater than previous profit(then update current profit) or
+//2. if the profit is less than previous profit then again book the profit and then update the start.
+
+//basically every time you feel the need to update the start book the profit first.
