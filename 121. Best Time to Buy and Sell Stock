@@ -1,0 +1,25 @@
+ class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices.length == 0) {
+            return 0;
+        }
+        int max = 0;
+        int start = prices[0];
+        
+        for(int i = 1; i < prices.length; i++) {
+            
+            if(prices[i] > start) {
+                max = Math.max(max, prices[i] - start);
+            }else {
+                start = prices[i];
+            }
+            
+        }
+        
+        return max;
+    }
+}
+
+
+//Consider buying position as first element. Now traverse the array. While traversing if the element is greater than start
+//element then calculate the profit and update the maxProfit, else update start element in hope of finding more profit.
