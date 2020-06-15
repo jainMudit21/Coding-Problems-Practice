@@ -1,0 +1,73 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    // Complete the minimumBribes function below.
+    static void minimumBribes(int[] q) {
+
+        int totalSwaps = 0;
+        for(int i = q.length - 1; i >= 0; i--) {
+
+            if(q[i] != i+1) { //need to check condition means original element at this position has given bribe, now we will check whether 1 bribe or 2 bribe
+
+                if(i-1 >= 0 && q[i-1] == i+1) { //given 1 bribe 
+                    totalSwaps++;
+                    swap(q, i-1, i);
+                }else if(i-2 >= 0 && q[i-2] == i+1) { //given 2 bribes
+                    totalSwaps += 2;
+                    swap(q, i-2, i-1);
+                    swap(q, i-1, i);
+                }
+                else { //too chaotic, trying to bribe more than 2 people
+                    System.out.println("Too chaotic");
+                    return;
+                }
+
+            }
+        }
+
+        System.out.println(totalSwaps);
+
+    }
+
+    static void swap(int arr[], int f, int l) {
+        int temp = arr[f];
+        arr[f] = arr[l];
+        arr[l] = temp;
+        
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int t = scanner.nextInt();
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            int n = scanner.nextInt();
+            scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+            int[] q = new int[n];
+
+            String[] qItems = scanner.nextLine().split(" ");
+            scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+            for (int i = 0; i < n; i++) {
+                int qItem = Integer.parseInt(qItems[i]);
+                q[i] = qItem;
+            }
+
+            minimumBribes(q);
+        }
+
+        scanner.close();
+    }
+}
+
+/* Great question, must try */
