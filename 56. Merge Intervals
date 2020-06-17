@@ -1,0 +1,68 @@
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<Pair> list = new ArrayList<>();
+        if(intervals.length == 0)   return intervals;
+        
+        for(int i = 0; i < intervals.length; i++) {
+            Pair obj = new Pair(intervals[i][0], intervals[i][1]);
+            
+            list.add(obj);
+        }
+        
+        Collections.sort(list, new SortByF());
+        ArrayList<ArrayList<Integer>> merged = new ArrayList<>();
+        Pair first = new Pair(list.get(0).f, list.get(0).s);
+        
+        for(int i = 1; i < list.size(); i++) {
+            Pair second = list.get(i);
+            if(first.s >= second.f) {
+                //yes overlapping
+                first.s = Math.max(first.s, second.s);
+            }else {
+                ArrayList<Integer> inside = new ArrayList<>();
+                inside.add(first.f);
+                inside.add(first.s);
+                merged.add(inside);
+                first = second;
+            }
+        }
+        
+        ArrayList<Integer> inside = new ArrayList<>();
+        inside.add(first.f);
+        inside.add(first.s); 
+        merged.add(inside);
+        
+        int matrix[][] = new int[merged.size()][2];
+        for(int i = 0; i < merged.size(); i++) {
+            ArrayList<Integer> temp = merged.get(i);
+            matrix[i][0] = temp.get(0);
+            matrix[i][1] = temp.get(1);
+        }
+        
+        return matrix;
+        
+    }
+    
+    class SortByF implements Comparator<Pair> {
+        @Override
+        public int compare(Pair o1, Pair o2) {
+            return o1.f - o2.f;
+        }
+    }
+    
+    private class Pair {
+        int f;
+        int s;
+        
+        Pair(int f,int s) {
+            this.f = f;
+            this.s = s;
+        }
+         
+        Pair() {
+            
+        }
+    }
+}
+
+//LeetCode does knows how to fuck things up.
