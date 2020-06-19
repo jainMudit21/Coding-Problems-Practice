@@ -1,0 +1,19 @@
+class Solution {
+    public int majorityElement(int[] nums) {
+        
+        int count = 0;
+        int candidate = -1;
+        
+        for(int i = 0; i < nums.length; i++) {
+            if(count == 0) {
+                candidate = nums[i];
+            }
+            
+            count += (nums[i] == candidate) ? 1 : -1;
+        }
+        
+        return candidate;
+}
+
+//the function assumes that majority element is present here. Very good algorithm (Boyer- moore Voting algo).
+//Leetcode fucked the submissions of this one also. Apparently Sorting approach O(nlogn) is more fast than hashing O(n)
