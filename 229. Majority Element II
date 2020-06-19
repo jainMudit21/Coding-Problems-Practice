@@ -1,0 +1,47 @@
+class Solution {
+    public List<Integer> majorityElement(int[] nums) {
+        
+        int candidate1 = 0;
+        int candidate2 = 0;
+        
+        int count1 = 0;
+        int count2 = 0;
+        
+        for(int num : nums) {
+            
+            if(num == candidate1){ // if our current candidate1 is found again then increase it's count
+                count1++;
+            }else if(num == candidate2){ // if our current candidate2 is found again then increase it's count
+                count2++;
+            }else if(count1 == 0){ // if our count1 is 0 it means we do not have a candidate1 so we start agains with current element
+                candidate1 = num;
+                count1++;
+            }else if(count2 == 0){ // if our count2 is 0 it means we do not have a candidate2 so we start agains with current element
+                candidate2 = num;
+                count2++;
+            }else{ // if our count1 and count2 is not 0 and the current element is neither equal to candidate1 or candidate2 we decrease counter of both candidates
+                count1--;
+                count2--;
+            }
+            
+            
+            
+        }
+        
+        List<Integer> list = new ArrayList<>();
+        count1 = count2 = 0;
+        for(int i : nums) {
+            if(i == candidate1)  count1++;
+            
+            else if(i == candidate2)  count2++;
+        }
+        int n = nums.length;
+        if(count1 > n/3)    list.add(candidate1);
+        if(count2 > n/3)  list.add(candidate2);
+        
+        
+        return list;
+    }
+}
+
+//modifying boyer moore voting algo
