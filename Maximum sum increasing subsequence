@@ -1,0 +1,30 @@
+URL: https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence4749/1#
+
+class Solution
+{
+	public int maxSumIS(int arr[], int n)  
+	{  
+	    //code here.
+        if(n == 0)  
+            return 0;
+        int ans = 0;
+        
+        int temp[] = new int[n];
+    
+        for(int i = n-1; i>= 0; i--) {
+            int max = 0;
+            
+            for(int j = i+1; j < n; j++) {
+                
+                if(arr[j] > arr[i]) {
+                    max = Math.max(max, temp[j]);
+                }
+            }
+            
+            temp[i] = max + arr[i];
+            ans = Math.max(ans, temp[i]);
+        }
+        
+        return ans;
+	}  
+}
