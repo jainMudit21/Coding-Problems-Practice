@@ -1,0 +1,38 @@
+URl: https://leetcode.com/problems/longest-palindromic-subsequence/
+
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        if(s.length() == 0)
+            return 0;
+            
+        int n = s.length();
+        int mat[][] = new int[n][n];
+        
+        for(int gap = 0; gap < n; gap++) {
+            for(int i = 0, j = gap; j < n; j++, i++) {
+                if(gap == 0) {
+                    mat[i][j] = 1;
+                    continue;
+                }
+                char c1 = s.charAt(i);
+                char c2 = s.charAt(j);
+                
+                if(gap == 1) {
+                    if(c1 == c2)
+                        mat[i][j] = 2;
+                    else
+                        mat[i][j] = 1;
+                    continue;
+                }
+                
+                if(c1 == c2) {
+                    mat[i][j] = 2 + mat[i+1][j-1];
+                }else {
+                    mat[i][j] = Math.max(mat[i][j-1], mat[i+1][j]);
+                }
+            }
+        }
+        
+        return mat[0][n-1];
+    }
+}
