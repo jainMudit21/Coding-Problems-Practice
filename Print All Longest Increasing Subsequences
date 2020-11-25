@@ -1,0 +1,78 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/dynamic-programming/lis-re-official/ojquestion#
+
+import java.util.*;
+
+public class Main{
+    
+    public static class Pair {
+        int l;
+        int i;
+        int v;
+        String psf;
+        
+        Pair(int l, int i, int v, String psf){
+            this.l = l;
+            this.i = i;
+            this.v = v;
+            this.psf = psf;
+        }
+    }
+    
+        
+    public static void solution(int []arr){
+        
+        int totalMax = 0;
+        int dp[] = new int[arr.length];
+        
+        for(int i = 0; i < arr.length; i++) {
+            int max = 0;
+            for(int j = 0; j < i; j++) {
+                if(arr[j] < arr[i]) {
+                    max = Math.max(max, dp[j]);
+                }
+            }
+            dp[i] = max == 0 ? 1: max+1;
+            totalMax = Math.max(totalMax, dp[i]);
+        }
+        System.out.println(totalMax);
+        
+        Queue<Pair> q = new LinkedList<Pair>();
+        for(int i = 0; i < arr.length; i++) {
+            if(dp[i] == totalMax) {
+                Pair p = new Pair(totalMax, i, arr[i], arr[i] +"");
+                q.add(p);
+            }
+        }
+        
+        while(!q.isEmpty()) {
+            Pair p = q.remove();
+            if(p.l == 1) {
+                System.out.println(p.psf);
+                continue;
+            }
+            
+            for(int i = p.i-1; i>= 0; i--) {
+                if(dp[i] == p.l - 1 && arr[i] < p.v) {
+                    Pair pair = new Pair(p.l-1, i, arr[i], arr[i] + " -> "+ p.psf);
+                    q.add(pair);
+                }
+            }
+        }
+        
+        
+    }
+    
+    
+    public static void main(String []args){
+        Scanner scn = new Scanner(System.in);
+
+        int n = scn.nextInt();
+        int arr[] = new int[n];
+        for(int i = 0 ; i < n ; i++){
+            arr[i] = scn.nextInt();
+        }
+
+        solution(arr);
+        scn.close();
+    }
+}
