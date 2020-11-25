@@ -1,0 +1,77 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/dynamic-programming/min-jumps-re-official/ojquestion#
+
+
+import java.util.*;
+
+public class Main{
+    public static void Solution(int arr[]){
+        // write your code here
+        int n = arr.length;
+        Integer dp[] = new Integer[n];
+        dp[n-1] = 0;
+        
+        for(int i = n-2; i >= 0; i--) {
+            int steps = arr[i];
+            int min = Integer.MAX_VALUE;
+            for(int j = 1; j <= steps && j+i < n; j++) {
+                if(dp[i+j] != null && dp[i+j] < min) {
+                    min = dp[i+j];
+                }
+            }
+            
+            if(min != Integer.MAX_VALUE) {
+                dp[i] = min + 1;
+            }
+        }
+        int minJump = dp[0];
+        System.out.println(minJump);
+        
+        Queue<Pair> q = new LinkedList<Pair>();
+        Pair p = new Pair(0, arr[0], minJump,  "0");
+        q.add(p);
+        
+        while(!q.isEmpty()) {
+            Pair pr = q.remove();
+            if(pr.l == 0) {
+                System.out.println(pr.psf + " .");
+                continue;
+            }
+            
+            for(int j = 1; j <= pr.s && pr.i + j < n; j++) {
+                if(dp[pr.i+j]!= null && dp[pr.i+j] == pr.l-1) {
+                    Pair pp = new Pair(pr.i + j, arr[pr.i + j], pr.l-1, pr.psf + " -> "+(pr.i + j));
+                    q.add(pp);
+                }
+            }
+        }
+        
+        
+        
+    }
+    
+    public static class Pair {
+        int i; //index
+        int s; //size can go
+        int l; //left
+        String psf;
+        
+        Pair(int i, int s, int l, String psf) {
+            this.i = i;
+            this.s = s;
+            this.l = l;
+            this.psf = psf;
+        }
+    }
+    
+    public static void main(String []args){
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+
+        int arr[] = new int[n];
+        for(int i = 0 ; i < n ; i++)
+            arr[i] = scn.nextInt();
+
+        Solution(arr);
+        scn.close();
+    }
+}
