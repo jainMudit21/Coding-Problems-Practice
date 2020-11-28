@@ -1,0 +1,40 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/dynamic-programming/circle-and-chords-official/ojquestion#
+
+catalan number implementation
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static long NumberOfChords(int n){
+        //write your code here
+        
+        long dp[] = new long[n+1];
+        dp[0] = dp[1] = 1;
+        
+        for(int i=2; i < dp.length; i++) {
+            long ans = 0;
+            for(int j = 0, k = i-1; j <= k; j++,k--) {
+                if(j == k) {
+                    ans += dp[j]*dp[j];
+                    continue;
+                }
+                ans += 2*dp[j]*dp[k];
+            }
+            dp[i] = ans;
+        }
+        // System.out.println(Arrays.toString(dp));
+        return (dp[n]);
+       
+    }
+
+    
+    public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		int n = scn.nextInt();
+		System.out.println(NumberOfChords(n));
+        
+    }
+      
+}
