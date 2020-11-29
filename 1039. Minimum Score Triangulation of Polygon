@@ -1,0 +1,31 @@
+URL: https://leetcode.com/problems/minimum-score-triangulation-of-polygon/
+
+class Solution {
+    public int minScoreTriangulation(int[] arr) {
+        int dp[][] = new int[arr.length][arr.length];
+		int n = arr.length;
+		for(int g = 0; g < n; g++) {
+		    for(int i=0, j=g; j < n; i++,j++) {
+		        if(g == 0 || g == 1) {
+		            dp[i][j] = 0;
+		        }else if(g==2) {
+		            dp[i][j] = arr[i] *arr[i+1]*arr[i+2];
+		        }else {
+		            //loop again
+		            int min = Integer.MAX_VALUE;
+		            for(int k = i+1; k < j; k++) {
+		                int tria = arr[i] * arr[k] * arr[j];
+		                int left = dp[i][k];
+		                int right = dp[k][j];
+		                
+		                min = Math.min(min, tria + left + right);
+		            }
+		            
+		            dp[i][j] = min;
+		        }
+		    }
+		}
+		
+		return dp[0][n-1];
+    }
+}
