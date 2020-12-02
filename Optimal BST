@@ -1,0 +1,55 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/dynamic-programming/optimal-bst-official/ojquestion#
+
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+  
+  private static void optimalbst(int[] keys, int[] freq, int n) {
+    //write your code here
+    
+    int dp[][] = new int[n][n];
+    
+    for(int g=0; g<n; g++) {
+        for(int i=0,j=g; j<n; i++, j++) {
+            
+            if(g == 0) {
+                dp[i][j] = freq[i];
+            }else if(g == 1) {
+                dp[i][j] = Math.min(freq[i] + 2*freq[j], 2*freq[i] + freq[j]);
+            }else {
+                int min = Integer.MAX_VALUE;
+                int sum = 0;
+                for(int k=i; k <= j; k++) {
+                    int lc = (k == i) ? 0: dp[i][k-1];
+                    int rc = (k == j) ? 0 : dp[k+1][j];
+                    sum += freq[k];
+                    min = Math.min(min, lc+rc);
+                }
+                
+                dp[i][j] = min + sum;
+            }
+            
+        }
+    }
+    
+    System.out.println( dp[0][n-1]);
+    
+	}
+
+    public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		int n = scn.nextInt();
+	int[] keys = new int[n];
+	int[] frequency = new int[n];
+    for(int i= 0 ;i < n ; i++) {
+		keys[i] = scn.nextInt();
+	}
+	for(int i = 0 ; i < n; i++){
+      frequency[i] = scn.nextInt();
+    }
+	optimalbst(keys,frequency,n);
+	}
+
+}
