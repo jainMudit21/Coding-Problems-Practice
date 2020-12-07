@@ -1,0 +1,30 @@
+URL: https://leetcode.com/problems/burst-balloons/
+
+class Solution {
+    public int maxCoins(int[] arr) {
+        int n = arr.length;
+        if(n == 0)  return 0;
+        int dp[][] = new int[n][n];
+
+        for(int g=0; g<n; g++) {
+
+            for(int i=0,j=g; j<n; i++,j++) {
+                int max = Integer.MIN_VALUE;
+
+                for(int k=i; k<= j; k++) {
+                    int left = i == k ? 0 : dp[i][k-1];
+                    int right = j == k ? 0 : dp[k+1][j];
+                    int val = (i == 0 ? 1 : arr[i-1]) * arr[k] * (j == n-1 ? 1 : arr[j+1]);
+                    int tc = left + right + val;
+
+                    max = Math.max(max, tc);
+                }
+
+                dp[i][j] = max;
+            }
+
+        }
+
+        return dp[0][n-1];
+    }
+}
