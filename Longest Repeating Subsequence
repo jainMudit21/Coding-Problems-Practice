@@ -1,0 +1,46 @@
+URL: https://practice.geeksforgeeks.org/problems/longest-repeating-subsequence/0#
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+class GFG
+ {
+	public static void main (String[] args) throws IOException
+	 {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	    int t = Integer.parseInt(br.readLine());
+	    while(t-->0) {
+	        int n = Integer.parseInt(br.readLine());
+	        String s = br.readLine();
+	        System.out.println(lrs(s));
+	    }
+	 }
+	 
+	 public static int lrs(String s){
+		//write your code here
+		int n = s.length();
+		int dp[][] = new int[n+1][n+1];
+		dp[0][0] = 0;
+		
+		for(int i = 0; i < dp.length; i++) {
+		    for(int j = 0; j < dp[0].length; j++) {
+		        
+		        if(i == 0 || j == 0) {
+		            dp[i][j] = 0;
+		            continue;
+		        }
+		        
+		        if(s.charAt(i-1) == s.charAt(j-1) ) {
+		            if(i != j) {
+		               dp[i][j] = dp[i-1][j-1] + 1;
+		               continue;
+		            }
+		        }
+		        dp[i][j] = Math.max(dp[i][j-1], dp[i-1][j]);
+		        
+		    }
+		}
+
+		return dp[n][n];
+	}
+}
