@@ -1,0 +1,43 @@
+URL: https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/
+
+class Solution {
+    public int minimumDeleteSum(String s1, String s2) {
+        int dp[][] = new int[s1.length() + 1][s2.length() + 1];
+		dp[0][0] = 0;
+		
+		for(int i=0; i < dp.length; i++) {
+		    for(int j=0; j < dp[0].length; j++) {
+		        
+		        if(i == 0) {
+		            if(j == 0)  continue;
+		            
+		            int c = (int) s2.charAt(j-1);
+		            dp[i][j] = dp[i][j-1] + c;
+		            continue;
+		        }
+		        if(j == 0) {
+		            int c = (int) s1.charAt(i-1);
+		            dp[i][j] = dp[i-1][j] + c;
+		            continue;
+		        }
+		        
+		        /* 2 cases:
+		        1. Either delete character of s1 and add the cost of upper element
+		        2. Or delete char of s2 and add cost of prev element
+		        */
+		        
+		        if(s1.charAt(i-1) == s2.charAt(j-1)) {
+		            dp[i][j] = dp[i-1][j-1];
+		        }
+		        else {
+		            int one = (int) s1.charAt(i-1) + dp[i-1][j];
+    		        int two = (int) s2.charAt(j-1) + dp[i][j-1];
+    		        
+    		        dp[i][j] = Math.min(one, two);
+		        }
+		    }
+		}
+		
+		return dp[s1.length()][s2.length()];
+    }
+}
