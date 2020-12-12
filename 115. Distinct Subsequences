@@ -1,0 +1,162 @@
+URL: https://leetcode.com/problems/distinct-subsequences/
+
+//Recursive Solution
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+	public static int solution(String s, String t, int si, int ti) {
+		// write your code here
+		if(si == s.length()) {
+		    if(ti == t.length()) {
+		        return 1;
+		    }else {
+		        return 0;
+		    }
+		}
+		
+		if(ti == t.length()) {
+		    return 1;
+		}
+		
+		int c1 = s.charAt(si);
+		int c2 = t.charAt(ti);
+		int tv = 0;
+		
+		if(c1 == c2) {
+		    int tv1 = solution(s, t, si + 1, ti);
+		    int tv2 = solution(s, t, si + 1, ti + 1);
+		    tv = tv1 + tv2;
+		}else {
+		    tv = solution(s, t, si + 1, ti);
+		}
+
+		return tv;
+	}
+	
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		String s1 = scn.next();
+		String s2 = scn.next();
+		System.out.println(solution(s1, s2, 0, 0));
+	}
+
+}
+
+
+
+
+
+
+
+
+
+//Memoization
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+	public static int solution(String s, String t, int si, int ti, int dp[][]) {
+		// write your code here
+		if(si == s.length()) {
+		    if(ti == t.length()) {
+		        return 1;
+		    }else {
+		        return 0;
+		    }
+		}
+		
+		if(ti == t.length()) {
+		    return 1;
+		}
+		
+		if(dp[si][ti] != -1) {
+		    return dp[si][ti];
+		}
+		
+		int c1 = s.charAt(si);
+		int c2 = t.charAt(ti);
+		int tv = 0;
+		
+		if(c1 == c2) {
+		    int tv1 = solution(s, t, si + 1, ti, dp);
+		    int tv2 = solution(s, t, si + 1, ti + 1, dp);
+		    tv = tv1 + tv2;
+		}else {
+		    tv = solution(s, t, si + 1, ti, dp);
+		}
+		
+		dp[si][ti] = tv;
+
+		return tv;
+	}
+	
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		String s1 = scn.next();
+		String s2 = scn.next();
+		int dp[][] = new int[s1.length()][s2.length()];
+		for(int i=0; i < dp.length; i++) {
+		    Arrays.fill(dp[i], -1);
+		}
+		System.out.println(solution(s1, s2, 0, 0, dp));
+	}
+
+}
+
+
+
+
+
+
+
+
+//Tabular Form
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+	public static int solution(String s, String t) {
+		
+		int dp[][] = new int[t.length()+1][s.length()+1];
+		
+		for(int i=dp.length-1; i>=0; i--) {
+		    for(int j=dp[0].length-1; j>=0; j--) {
+		        
+		        if(i == dp.length-1) {
+		            if(j == dp[0].length-1) {
+		                dp[i][j] = 1;
+		            }else {
+		                dp[i][j] = 1;
+		            }
+		        }else if(j == dp[0].length-1) {
+		            dp[i][j] = 0;
+		        }else {
+		            char c1 = s.charAt(j);
+		            char c2 = t.charAt(i);
+		           
+		            if(c1 == c2) {
+		                dp[i][j] = dp[i+1][j+1];
+		                dp[i][j] += dp[i][j+1];
+		            }else {
+		                dp[i][j] = dp[i][j+1];
+		            }
+		        }
+		    }
+		}
+
+		return dp[0][0];
+	}
+	
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		String s1 = scn.next();
+		String s2 = scn.next();
+		
+		System.out.println(solution(s1, s2));
+	}
+
+}
