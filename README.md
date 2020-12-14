@@ -2,5 +2,4 @@
 
 Hey everyone, 
 
-I have solved some coding problems and made a few projects in my bachelor's degree. From now on I'll be making commits to each and every problem I am solving on any coding practice websites for self motivation.
-
+I am a 2020 CS Grad from Thapar University. I am creating this repo to add solutions of problems which I solve on different websites. Main idea is to showcase my problem solving ability and motivate myself to achieve more in life.
