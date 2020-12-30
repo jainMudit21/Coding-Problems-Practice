@@ -1,0 +1,46 @@
+URL: https://practice.geeksforgeeks.org/problems/maximum-difference-of-zeros-and-ones-in-binary-string4111/1#
+
+// { Driver Code Starts
+//Initial Template for Java
+
+import java.io.*;
+import java.util.*;
+
+class GFG {
+    public static void main(String args[]) throws IOException {
+        BufferedReader read =
+            new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(read.readLine());
+        while (t-- > 0) {
+            
+            String s = read.readLine();
+            Solution ob = new Solution();
+            System.out.println(ob.maxSubstring(s));
+        }
+    }
+}// } Driver Code Ends
+
+
+//User function Template for Java
+
+class Solution {
+    int maxSubstring(String str) {
+        // code here
+        int cb = Integer.MIN_VALUE;
+        int ob = Integer.MIN_VALUE;
+        
+        for(int i=0; i <str.length(); i++) {
+            int c = str.charAt(i) - '0';
+            
+            if(cb < 0) {
+                cb = (c == 0) ? 1: -1;
+            }else {
+                cb = (c == 0) ? cb + 1: cb - 1;
+            }
+            
+            ob = Math.max(cb, ob);
+        }
+
+        return ob;
+    }
+}
