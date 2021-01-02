@@ -25,6 +25,37 @@ public int superEggDrop(int e, int f) {
         return dp[e][f];
     }
 
+
+
+//Sub-optimal solution
+class Solution {
+    HashMap<String, Integer> memo = new HashMap<>();
+    int superEggDrop(int K, int N) {
+        if(K == 1) return N;
+        if(N == 0) return 0;
+
+        if(memo.containsKey(K + " " + N)){
+            return memo.get(K + " " + N);
+        }
+        int ans = Integer.MAX_VALUE;
+        //We don't know which floor has the best answer. So, we will try 1 to N floors and get min value.
+        for(int i = 1; i <= N; i++){
+            //In the worst case to know what F is with certainty, we need to get the max result
+            int cur = Math.max(
+                //if egg broken, we have K-1 eggs, and we start to search floor 1 to i - 1
+                superEggDrop(K - 1, i - 1),
+                //if egg is good, we still have K eggs, and we start to search floor i+1 to N
+                superEggDrop(K, N - i)
+            ) + 1;//+1 because we just throw egg at floor i
+            ans = Math.min(ans, cur);
+        }
+        memo.put(K + " " + N, ans);
+        return ans;
+    }
+}
+
+
+
 //Optimal solution
 class Solution {
     int superEggDrop(int K, int N) {
