@@ -1,0 +1,55 @@
+URL: https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/
+
+class Solution {
+    public int maxSumTwoNoOverlap(int[] arr, int l, int m) {
+        // write your code here
+        int n = arr.length;
+        
+        int Ls[] = new int[n];
+        int Ms[] = new int[n];
+        
+        int lsum = 0;
+        for(int i=0; i <= n - l; i++) {
+            if(i == 0) {
+                for(int j=0; j < l; j++) {
+                    lsum += arr[j];
+                }
+            }else {
+                lsum = lsum + arr[i+l-1] - arr[i-1];
+            }
+            
+            Ls[i] = lsum;
+        }
+        
+        int msum = 0;
+        for(int i=0; i <= n - m; i++) {
+            if(i == 0) {
+                for(int j=0; j < m; j++) {
+                    msum += arr[j];
+                }
+            }else {
+                msum = msum + arr[i+m-1] - arr[i-1];
+            }
+            
+            Ms[i] = msum;
+        }
+        
+        int lmax[] = new int[n+1];
+        int mmax[] = new int[n+1];
+        
+        for(int i=n-1; i >= 0; i--) {
+            lmax[i] = Math.max(lmax[i+1], Ls[i]);
+            mmax[i] = Math.max(mmax[i+1], Ms[i]);
+        }
+        
+        int ans = 0;
+        for(int i=0; i <= n-l-1; i++) {
+            ans = Math.max(ans, Ls[i] + mmax[i+l]);
+        }
+        for(int i=0; i <= n-m-1; i++) {
+            ans = Math.max(ans, Ms[i] + lmax[i+m]);
+        }
+        
+        return ans;
+    }
+}
