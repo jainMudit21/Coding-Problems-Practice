@@ -1,0 +1,46 @@
+URL: https://leetcode.com/problems/gray-code/
+
+//Basic recursive Solution
+//Nothing Fancy, wondering why medium difficulty
+class Solution {
+    public List<Integer> grayCode(int n) {
+        if(n <= 0)  {
+            List<Integer> rr = new ArrayList<Integer>();
+            rr.add(0);
+            return rr;
+        }
+        
+        List<String> var = helper(n);
+        List<Integer> ans = new ArrayList<Integer>();
+        for(String s : var) {
+            ans.add(Integer.parseInt(s, 2));
+        }
+        return ans;
+    }
+    
+    public List<String> helper(int n) {
+        
+        if(n == 1) {
+            List<String> rr = new ArrayList<String>();
+            rr.add("0");
+            rr.add("1");
+            return rr;
+        }
+        
+        List<String> rr = helper(n-1);
+        List<String> mr = new ArrayList<String>();
+        
+        for(int i=0; i < rr.size(); i++) {
+            String str = rr.get(i);
+            str = "0"+str;
+            mr.add(str);
+        }
+        for(int i=rr.size()-1; i >= 0; i--) {
+            String str = rr.get(i);
+            str = "1"+str;
+            mr.add(str);
+        }
+        
+        return mr;
+    }
+}
