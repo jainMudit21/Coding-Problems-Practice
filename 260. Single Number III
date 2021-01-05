@@ -1,0 +1,24 @@
+URL: https://leetcode.com/problems/single-number-iii/
+
+class Solution {
+    public int[] singleNumber(int[] arr) {
+        
+        int xxory = 0;
+        for(int val: arr) {
+            xxory = xxory ^ val;
+        }
+        
+        int rsbm = xxory & -xxory;
+        
+        int x = 0;
+        int y = 0;
+        for(int val: arr) {
+            if((val & rsbm) == 0) {
+                x = x ^ val;
+            }else
+                y = y ^ val;
+        }
+        
+        return new int[]{x, y};
+    }
+}
