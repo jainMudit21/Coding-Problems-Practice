@@ -1,0 +1,50 @@
+URL: https://leetcode.com/problems/number-of-valid-words-for-each-puzzle/
+
+class Solution {
+    public List<Integer> findNumOfValidWords(String[] words, String[] puzzles) {
+        HashMap<Character, ArrayList<Integer>> map = new HashMap<>();
+        for(int i=0; i < 26; i++) {
+            map.put((char)('a' + i), new ArrayList<>());
+        }
+        
+        for(String word: words) {
+            int mask = 0;
+            for(char ch: word.toCharArray()) {
+                int bit = ch - 'a';
+                mask = mask | (1 << bit);
+            }
+            
+            HashSet<Character> unique = new HashSet<>();
+            for(char ch: word.toCharArray()) {
+                if(unique.contains(ch)) {
+                    continue;
+                }
+                
+                unique.add(ch);
+                ArrayList<Integer> list = map.get(ch);
+                list.add(mask);
+                map.put(ch, list);
+            }
+        }
+        
+        List<Integer> answer = new ArrayList<>();
+        for(String puzzle: puzzles) {
+            int pmask = 0;
+            for(char ch: puzzle.toCharArray()) {
+                int bit = ch - 'a';
+                pmask = pmask | (1 << bit);
+            }
+            
+            char fch = puzzle.charAt(0);
+            int count = 0;
+            for(int wmask: map.get(fch)) {
+                if((wmask & pmask) == wmask) {
+                    count++;
+                }
+            }
+            answer.add(count);
+        }
+
+        return answer;
+    }
+}
