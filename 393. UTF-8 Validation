@@ -1,0 +1,31 @@
+URL: https://leetcode.com/problems/utf-8-validation/
+
+class Solution {
+    public boolean validUtf8(int[] arr) {
+        int rbytes = 0; //remaining bytes
+        
+        for(int val: arr) {
+            if(rbytes == 0) {
+                if((val >> 7) == 0b0) { //start of 1 byte char
+                    rbytes = 0;
+                }else if((val >> 5) == 0b110) { //start of 2 byte char
+                    rbytes = 1;
+                }else if((val >> 4) == 0b1110) { //start of 3 byte char
+                    rbytes = 2;
+                }else if((val >> 3) == 0b11110) { //start of 4 byte char
+                    rbytes = 3;
+                }else {
+                    return false;
+                }
+            }else {
+                if((val >> 6) == 0b10) {
+                    rbytes--;
+                }else {
+                    return false;
+                }
+            }
+        }
+
+        return (rbytes == 0) ? true : false;
+    }
+}
