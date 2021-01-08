@@ -1,0 +1,25 @@
+URL: https://www.geeksforgeeks.org/calculate-7n8-without-using-division-and-multiplication-operators/
+
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/bit-manipulation/solve-7nby8-official/ojquestion
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+
+        /*
+        7n/8 can be represented as (8n - n)/8
+        1. Multiply n with 8 i.e. left shift with 3
+        2. Subtract n from (1)
+        3. Divide (2) by 8 i.e. right shift with 3
+        */
+
+        int val = (((n << 3) - n) >> 3);
+        System.out.println(val);
+    }
+
+}
