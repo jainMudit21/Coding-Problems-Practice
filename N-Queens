@@ -1,0 +1,48 @@
+URL: https://leetcode.com/problems/n-queens-ii/
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/nqueens-branch-and-bound-official/ojquestion#
+
+class Solution {
+    public int totalNQueens(int n) {
+        
+        boolean[][] board = new boolean[n][n];
+        boolean cols[] = new boolean[n];
+        boolean ndiag[] = new boolean[2 * n - 1];
+        boolean rdiag[] = new boolean[2 * n - 1];
+        
+        Custom var = new Custom();
+        var.val = 0;
+        
+        solve(board, 0, cols, ndiag, rdiag, var);
+        
+        return var.val;
+    }
+    
+    class Custom {
+        int val;
+    }
+    
+    public void solve(boolean board[][], int row, boolean cols[], boolean ndiag[], boolean rdiag[], Custom ans) {
+        if(row == board.length) {
+            ans.val++;
+            return;
+        }
+        
+        
+        for(int col=0; col < board.length; col++) {
+            
+            if(!cols[col] && !ndiag[row + col] && !rdiag[row - col + board.length - 1]) {
+                board[row][col] = true;
+                cols[col] = true;
+                ndiag[row + col] = true;
+                rdiag[row - col + board.length - 1] = true;
+                
+                solve(board, row + 1, cols, ndiag, rdiag, ans);
+                
+                board[row][col] = false;
+                cols[col] = false;
+                ndiag[row + col] = false;
+                rdiag[row - col + board.length - 1] = false;
+            }
+        }
+    }
+}
