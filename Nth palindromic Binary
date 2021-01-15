@@ -1,0 +1,52 @@
+URL: https://www.interviewbit.com/problems/palindromic-binary-representation/
+URL: https://www.geeksforgeeks.org/find-n-th-number-whose-binary-representation-palindrome/
+
+public class Solution {
+    public int solve(int n) {
+        //If you write palindromes till length 8 starting from 1, you will visualise that
+        //it is a pattern in number of palindromes of particular length
+        
+        //if L being the length then num of palindrome of length L are 2 raise to ((l-1)/2)
+        //therefore for find the group of lengths first in which this n will lie.
+        
+        int len=1;
+        int count = 1;
+        int temp = 0;
+        while(count < n) {
+            len++;
+            int elementsForThisLen = (1 << (len-1)/2);
+            count += elementsForThisLen;
+        }
+        
+        //Now we are in the length + 1 group.
+        //We need to find the offset in that group
+        count -= (1 << (len-1)/2);
+        int offset = n - count - 1; //because counting is starting from 0 therefore extra 1 will be deducted.
+        
+        //After having info regarding length and offset we can create half number
+        //create a number with 1 as MSB and (len-1) 0's
+        int ans = (1 << (len-1));
+        //we have to add offset to it after half length
+        ans |= (offset << (len/2));
+        
+        //Now our number is made for len/2 MSB, we need to create reverse of this and OR with the num
+        int valFR = (ans >> (len/2));
+        int rev = getRev(valFR);
+        ans |= rev;
+
+        return ans;
+    }
+    
+    public int getRev(int n) {
+        int rev = 0;
+        //we cant directly use NOT operator as it may lead to wrong result
+        while(n != 0) {
+            int lb = (n & 1);// get the lowest bit from n
+            rev |= lb;
+            rev <<= 1;
+            n >>= 1;
+        }
+        
+        return (rev >>= 1);
+    }
+}
