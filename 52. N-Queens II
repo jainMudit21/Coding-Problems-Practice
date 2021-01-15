@@ -1,0 +1,108 @@
+URL: https://leetcode.com/problems/n-queens-ii/
+URL: https://practice.geeksforgeeks.org/problems/n-queen-problem0315/1
+URL: https://leetcode.com/problems/n-queens/
+
+
+//Bit Manipulation Solution (Leetcode)
+class Solution {
+    public int totalNQueens(int n) {
+        
+        boolean[][] board = new boolean[n][n];
+        int cols = 0;
+        int ndiag = 0;
+        int rdiag = 0;
+        
+        Custom var = new Custom();
+        var.val = 0;
+        
+        solve(board, 0, cols, ndiag, rdiag, var);
+        
+        return var.val;
+    }
+    
+    class Custom {
+        int val;
+    }
+    
+    public void solve(boolean board[][], int row, int cols, int ndiag, int rdiag, Custom ans) {
+        if(row == board.length) {
+            ans.val++;
+            return;
+        }
+        
+        
+        for(int col=0; col < board.length; col++) {
+            
+            if(
+                ((cols & (1 << col)) == 0) &&
+                ((ndiag & (1 << (col+row))) == 0) &&
+                ((rdiag & (1 << (row-col+board.length-1))) == 0)
+                
+              ) {
+                board[row][col] = true;
+                cols ^= (1 << col);
+                ndiag ^= (1 << (row + col));
+                rdiag ^= (1 << (row - col + board.length-1));
+                
+                solve(board, row + 1, cols, ndiag, rdiag, ans);
+                
+                board[row][col] = false;
+                cols ^= (1 << col);
+                ndiag ^= (1 << (row + col));
+                rdiag ^= (1 << (row - col + board.length-1));
+            }
+        }
+    }
+}
+
+
+
+
+//Backtracking Solution
+class Solution {
+    public int totalNQueens(int n) {
+        
+        boolean[][] board = new boolean[n][n];
+        boolean cols[] = new boolean[n];
+        boolean ndiag[] = new boolean[2 * n - 1];
+        boolean rdiag[] = new boolean[2 * n - 1];
+        
+        Custom var = new Custom();
+        var.val = 0;
+        
+        solve(board, 0, cols, ndiag, rdiag, var);
+        
+        return var.val;
+    }
+    
+    class Custom {
+        int val;
+    }
+    
+    public void solve(boolean board[][], int row, boolean cols[], boolean ndiag[], boolean rdiag[], Custom ans) {
+        if(row == board.length) {
+            ans.val++;
+            return;
+        }
+        
+        
+        for(int col=0; col < board.length; col++) {
+            
+            if(!cols[col] && !ndiag[row + col] && !rdiag[row - col + board.length - 1]) {
+                board[row][col] = true;
+                cols[col] = true;
+                ndiag[row + col] = true;
+                rdiag[row - col + board.length - 1] = true;
+                
+                solve(board, row + 1, cols, ndiag, rdiag, ans);
+                
+                board[row][col] = false;
+                cols[col] = false;
+                ndiag[row + col] = false;
+                rdiag[row - col + board.length - 1] = false;
+            }
+        }
+    }
+    
+    
+}
