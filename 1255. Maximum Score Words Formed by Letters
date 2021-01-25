@@ -1,0 +1,48 @@
+URL: https://leetcode.com/problems/maximum-score-words-formed-by-letters/
+
+class Solution {
+    public int maxScoreWords(String[] words, char[] letters, int[] score) {
+        int[] count = new int[26];
+        for(char c : letters){
+            count[c - 'a']++;
+        }
+        return solution(words, count, score, 0);
+    }
+    
+    private int solution(String[] words, int[] farr, int[] score, int i) {
+        //Base Case
+        if(i == words.length) {
+            return 0;
+        }
+        
+        //Every word has 2 choices, either to join or not join the set
+        
+        
+        //1st decision, lets not join the set, therefore I'll return whatever answer is given by rest
+        int sno = solution(words, farr, score, i + 1);
+        
+        //2nd decision, lets join the set. First of all check that I can even form a word or not.
+        int scoreOfWord = 0;
+        boolean flag = true;
+        for(char ch: words[i].toCharArray()) {
+            if(farr[ch - 'a'] <= 0) {
+                flag = false;
+            }
+            
+            farr[ch - 'a']--;
+            scoreOfWord += score[ch - 'a'];
+        }
+        
+        int syes = 0;
+        if(flag) {
+            syes = scoreOfWord + solution(words, farr, score, i + 1);
+        }
+        
+        for(char ch: words[i].toCharArray()) {
+            farr[ch - 'a']++;
+        }
+        
+
+        return Math.max(sno, syes);
+    }
+}
