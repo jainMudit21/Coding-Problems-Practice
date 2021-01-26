@@ -1,0 +1,44 @@
+URL: https://leetcode.com/problems/path-with-maximum-gold/
+
+class Solution {
+    public int getMaximumGold(int[][] arr) {
+        int n = arr.length;
+        int m = arr[0].length;
+        boolean visited[][] = new boolean[n][m];
+        int max = 0;
+        
+        for(int i=0; i < n; i++) {
+            for(int j=0; j < m; j++) {
+                
+                if(arr[i][j] != 0) {
+                    
+                    // System.out.println("Starting new");
+                    max = Math.max(max, travelAndCollectGold(arr, i, j, visited));
+                    
+                }
+            }
+        }
+        
+        return max;
+    }
+    
+    
+    public int travelAndCollectGold(int arr[][], int i, int j, boolean visited[][]) {
+        if(i<0 || j<0 || i>=arr.length || j>=arr[0].length || visited[i][j] || arr[i][j]==0) {
+            return 0;
+        }
+        
+        visited[i][j] = true;
+        
+        int temp = 0;
+        
+        temp = Math.max(temp, travelAndCollectGold(arr, i-1, j, visited));
+        temp = Math.max(temp, travelAndCollectGold(arr, i, j+1, visited));
+        temp = Math.max(temp, travelAndCollectGold(arr, i, j-1, visited));
+        temp = Math.max(temp, travelAndCollectGold(arr, i+1, j, visited));
+        
+        visited[i][j] = false;
+        
+        return (arr[i][j] + temp);
+    }
+}
