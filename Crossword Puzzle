@@ -1,0 +1,213 @@
+URL: https://www.hackerrank.com/challenges/crossword-puzzle/problem
+
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    // Complete the crosswordPuzzle function below.
+    static String[] crosswordPuzzle(String[] crossword, String wordsStr) {
+        char arr[][] = new char[crossword.length][crossword[0].length()];
+        boolean containsX = false;
+        
+        for(int i=0; i < arr.length; i++) {
+            for(int j=0; j < arr[0].length; j++) {
+                if(crossword[i].charAt(j) != '-') {
+                    arr[i][j] = '+';
+                    if(crossword[i].charAt(j) == 'X') {
+                        containsX = true;
+                    }
+                }else {
+                    arr[i][j] = '-';
+                }
+            }
+        }
+        
+        String words[] = wordsStr.split(";");
+        
+        solution(arr, words, 0);
+        System.out.println("Lets check the char arr after completion");
+        System.out.println(Arrays.deepToString(arr));
+        crossword = new String[arr.length];
+        
+        if(containsX) {
+            for(int i=0; i < arr.length; i++) {
+            StringBuilder str = new StringBuilder();
+                for(int j=0; j < arr[0].length; j++) {
+                    str.append(arr[i][j] == '+' ? "X" : arr[i][j]);
+                }
+            crossword[i] = str.toString();
+            }
+        }else {
+            for(int i=0; i < arr.length; i++) {
+                crossword[i] = String.valueOf(arr[i]);
+            }
+        }
+        
+        
+        return crossword;
+    }
+    
+    private static boolean solution(char[][] arr, String[] words, int vidx) {
+        
+        //What a question! man, Just Great.
+        
+        if(vidx == words.length) {
+            System.out.println("Solution found, check the array values");
+            System.out.println(Arrays.deepToString(arr));
+            return true;
+        }
+        System.out.println("Entering the solution method");
+        
+        String word = words[vidx];
+        for(int i=0; i < arr.length; i++) {
+            for(int j=0; j < arr[0].length; j++) {
+                if(arr[i][j] == '-' || arr[i][j] == word.charAt(0)) {
+                    if(canPlaceHori(arr, word, i, j)) {
+                        boolean wePlaced[] = placeWordHori(arr, word, i, j);
+                        if(solution(arr, words, vidx + 1)) {
+                            return true;   
+                        }
+                        unplaceWordHori(arr, wePlaced, i, j);
+                    }
+                    
+                    if(canPlaceVerti(arr, word, i, j)) {
+                        boolean wePlaced[] = placeWordVerti(arr, word, i, j);
+                        if(solution(arr, words, vidx + 1)) {
+                            return true;
+                        }
+                        unplaceWordVerti(arr, wePlaced, i, j);
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private static boolean canPlaceHori(char arr[][], String word, int i, int j) {
+        if(j-1 >= 0 && (arr[i][j-1] != '+')) { //If left char exists and != '+' then not a perfect fit
+            return false;
+        }
+        
+        if(j+word.length() < arr[0].length && (arr[i][j + word.length()] != '+')) { //If right char exists and != '+' then not a perfect fit
+            return false;
+        }
+        
+        //If perfect fit till now, then lets check if it can be placed in the space or not
+        
+        for(int jj=0; jj < word.length(); jj++) {
+            if(j + jj >= arr[0].length) { //not enough space
+                return false;
+            }
+            
+            if(arr[i][j + jj] == '-' || arr[i][j+ jj] == word.charAt(jj)) {
+                continue;
+            }else {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private static boolean[] placeWordHori(char arr[][], String word, int i, int j) {
+        boolean wePlaced[] = new boolean[word.length()];
+        for(int jj = 0 ; jj < word.length(); jj++) {
+            if(arr[i][j + jj] == '-') {
+                arr[i][j + jj] = word.charAt(jj);
+                wePlaced[jj] = true;
+            }
+        }
+        return wePlaced;
+    }
+    
+    private static void unplaceWordHori(char arr[][], boolean wePlaced[], int i, int j) {
+        for(int jj=0; jj < wePlaced.length; jj++) {
+            if(wePlaced[jj]) {
+                arr[i][j + jj] = '-';
+            }
+        }
+    }
+    
+    private static boolean canPlaceVerti(char arr[][], String word, int i, int j) {
+        if(i-1 >= 0 && (arr[i-1][j] != '+')) { //If top char exists and != '+' then not a perfect fit
+            return false;
+        }
+        
+        if(i+word.length() < arr.length && (arr[i + word.length()][j] != '+')) { //If bottom char exists and != '+' then not a perfect fit
+            return false;
+        }
+        
+        //If perfect fit till now, then lets check if it can be placed in the space or not
+        for(int ii=0; ii < word.length(); ii++) {
+            if(i + ii >= arr.length) { //not enough space
+                return false;
+            }
+            
+            if(arr[i + ii][j] == '-' || arr[i + ii][j] == word.charAt(ii)) {
+                continue;
+            }else {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private static boolean[] placeWordVerti(char arr[][], String word, int i, int j) {
+        boolean wePlaced[] = new boolean[word.length()];
+        for(int ii = 0 ; ii < word.length(); ii++) {
+            if(arr[i + ii][j] == '-') {
+                arr[i + ii][j] = word.charAt(ii);
+                wePlaced[ii] = true;
+            }
+        }
+        return wePlaced;
+    }
+    
+    private static void unplaceWordVerti(char arr[][], boolean wePlaced[], int i, int j) {
+        for(int ii=0; ii < wePlaced.length; ii++) {
+            if(wePlaced[ii]) {
+                arr[i + ii][j] = '-';
+            }
+        }
+    }
+
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] crossword = new String[10];
+
+        for (int i = 0; i < 10; i++) {
+            String crosswordItem = scanner.nextLine();
+            crossword[i] = crosswordItem;
+        }
+
+        String words = scanner.nextLine();
+
+        String[] result = crosswordPuzzle(crossword, words);
+
+        for (int i = 0; i < result.length; i++) {
+            bufferedWriter.write(result[i]);
+
+            if (i != result.length - 1) {
+                bufferedWriter.write("\n");
+            }
+        }
+
+        bufferedWriter.newLine();
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}
