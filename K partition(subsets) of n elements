@@ -1,0 +1,90 @@
+URL: https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
+
+/*
+Two Solutions
+1. Recursive solution which can be memoized to count no. of ways
+2. Recursive Solution to print all number of ways
+*/
+
+//1st solution
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static int count = 1;
+
+    public static int solution(int n, int k) {
+        if(k > n || k==0 || n == 0) 
+            return 0;
+        
+        if(k == 1 || n == k) 
+            return 1;
+            
+        return k * solution(n-1, k) + solution(n-1, k-1);
+    }
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        int k = scn.nextInt();
+        System.out.println(solution(n, k));
+    }
+}
+
+//2nd solution
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/k-partitions-official/ojquestion#
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static int count = 1;
+
+    public static void solution(int i, int n, int k, int setSoFar, ArrayList < ArrayList < Integer >> ans) {
+        if (i > n) {
+            //Base Case
+            if (setSoFar == k) {
+                //all sets have been used i.e. No empty set
+                System.out.print(count + ". ");
+                count++;
+                for (int j = 0; j < ans.size(); j++) {
+                    System.out.print(ans.get(j) + " ");
+                }
+                System.out.println();
+            }
+
+            return;
+        }
+
+
+        for (int j = 0; j < ans.size(); j++) {
+            //check is the arraylist has some existing elements or empty
+            if (ans.get(j).size() > 0) {
+                //Existing Set
+                ans.get(j).add(i);
+                solution(i + 1, n, k, setSoFar, ans);
+                ans.get(j).remove(ans.get(j).size() - 1);
+            } else {
+                //empty set, therefore create a set
+                //BEWARE: go only once to stop permutations
+                ans.get(j).add(i);
+                solution(i + 1, n, k, setSoFar + 1, ans);
+                ans.get(j).remove(ans.get(j).size() - 1);
+                break;
+            }
+        }
+
+    }
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        int k = scn.nextInt();
+        ArrayList < ArrayList < Integer >> ans = new ArrayList < > ();
+        for (int i = 0; i < k; i++) {
+            ans.add(new ArrayList < > ());
+        }
+        solution(1, n, k, 0, ans);
+
+    }
+}
