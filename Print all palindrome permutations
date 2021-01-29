@@ -1,0 +1,100 @@
+URL: https://practice.geeksforgeeks.org/problems/pallindrome-patterns0809/1#
+
+//If you use HashMap, you may not get result in alphabetical order
+
+// { Driver Code Starts
+//Initial Template for Java
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+class GFG
+{
+	public static void main(String[] args) throws IOException
+	{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine().trim());
+        while(t-->0)
+        {
+            String s = br.readLine().trim();
+            Solution ob = new Solution();
+            List<String> res  = ob.all_palindromes(s);
+            System.out.print("{ ");
+            for(int i = 0; i < res.size(); i++)
+            {
+                System.out.print(res.get(i) + " ");
+            }   
+            System.out.println("}");                     
+        }
+	}
+}// } Driver Code Ends
+
+
+//User function Template for Java
+
+class Solution
+{
+    public List<String> all_palindromes(String str)
+    {
+        int fmap[] = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if(fmap[ch-'a'] == 0) {
+                fmap[ch-'a'] = 1;
+            }else {
+                fmap[ch-'a']++;
+            }
+        }
+
+        //write your code here
+        int countOdds = 0;
+        Character oddc = null;
+        int ts = 0;
+        
+        for(int i=0; i < fmap.length; i++) {
+            int freq = fmap[i];
+            if(freq % 2 == 1) {
+                countOdds++;
+                oddc = (char)(i + 'a');
+            }
+            
+            fmap[i] = freq/2;
+            ts += freq/2;
+        }
+        
+        if(countOdds > 1) {
+            return new ArrayList<String>();
+        }
+        
+        List<String> list = new ArrayList<>();
+        
+        solution(0, ts, fmap, oddc, "", list);
+        return list;
+    }
+    
+    public void solution(int cs, int ts, int fmap[], Character oddc, String asf, List<String> list) {
+        
+        if(cs == ts) {
+            // System.out.println("ans found");
+            String rev = new StringBuilder(asf).reverse().toString();
+            if(oddc != null) {
+                list.add(asf + oddc + rev);
+            }else {
+                list.add(asf + rev);
+            }
+            return;
+        }
+        
+        
+        for(int i=0; i < fmap.length; i++) {
+            int freq = fmap[i];
+            if(freq <=0 ) {
+                continue;
+            }
+            fmap[i] = freq-1;
+            solution(cs + 1, ts, fmap, oddc, asf + (char)(i + 'a'), list);
+            fmap[i] = freq; //Careful here
+        }
+
+    }
+}
