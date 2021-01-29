@@ -1,0 +1,73 @@
+URL: https://leetcode.com/problems/palindrome-partitioning/
+
+/*
+Approach: So basically, we have to list all out all the ways in which we can partition (split) our string so that all the partitions (splits/substrings) are palindrome. Cool, right?
+Or may be not. You might think, its too tough but lets break it down.
+
+Recursive solution:
+1. Start from first index and go till end of string(FOR Loop from start of string till end), checking that all the substrings from 0 to ith index are palindromes or not.
+If they are, then split right there and recurse for next iteration by passing the rest of string (i.e. string - palindromic string)
+If they are not, then continue for next iteration in the FOR loop.
+
+Major Overhead: Actually you need to iterate for every substring to check whether its a palindrome or not. So, therefore O(length of substring from i to j)
+computation is taking place for every iteration of FOR Loop. And there are multiple for loops in recursive stack. WOAH! I cant even compute them.
+
+What if, we can find palindromic nature in O(1) irrespective of length of substring. I know how. 
+Lets precompute and save it in DP advance. Hoorah! Here goes our runtime down.
+*/
+
+class Solution {
+    
+    boolean dp[][];
+    public List<List<String>> partition(String str) {
+        List<List<String>> list = new ArrayList<>();
+        dp = new boolean[str.length()][str.length()];
+        
+        precompute(dp, str);
+        // System.out.println(Arrays.deepToString(dp));
+        
+        solution(str, "", list, 0);
+        
+        return list;
+    }
+    
+    public void precompute(boolean dp[][], String s) {
+        
+        for(int g=0; g<s.length(); g++) {
+            for(int i=0,j=g; j<dp[0].length; i++,j++) {
+                if(g == 0 || g == 1) {
+                    if(s.charAt(i) == s.charAt(j))
+                        dp[i][j] = true;
+                    continue;
+                }
+                
+                if(s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = dp[i+1][j-1];
+                }//else false already exists
+            }
+        }
+    }
+    
+    public void solution(String str, String asf, List<List<String>> list, int startIndex) {
+        if(startIndex >= str.length()) {
+            List<String> items = Arrays.asList(asf.split("\\s+"));
+            // System.out.println(items);
+            list.add(items);
+            return;
+        }
+        
+        for(int endIndex=startIndex; endIndex < str.length(); endIndex++) {
+            String prefix = str.substring(startIndex, endIndex + 1);
+            // String ros = str.substring(endIndex + 1);
+            
+            if(isPalin(startIndex, endIndex)) {
+                solution(str, asf + prefix + " ", list, endIndex + 1);
+            }
+        }
+
+    }
+    
+    public boolean isPalin(int si, int ei) {
+        return dp[si][ei];
+    }
+}
