@@ -1,0 +1,65 @@
+URL: https://www.geeksforgeeks.org/match-a-pattern-and-string-without-using-regular-expressions/
+
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/pattern-matching-official/ojquestion#
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void solution(String str, String pattern, HashMap < Character, String > map, String origPat) {
+        //write your code here
+        if(pattern.length() == 0) {
+            if(str.length() == 0) {
+                //Pattern Matched
+                Set<Character> alreadyIncluded = new HashSet<>();
+                for(int i=0; i < origPat.length(); i++) {
+                    char ch = origPat.charAt(i);
+                    if(!alreadyIncluded.contains(ch)) {
+                        alreadyIncluded.add(ch);
+                        System.out.print(ch + " -> " + map.get(ch) + ", ");
+                    }
+                }
+                System.out.println(".");
+            }
+            return;
+        }
+        
+        char chp = pattern.charAt(0);
+        String restPattern = pattern.substring(1);
+        
+        if(map.containsKey(chp)) {
+            //find previous mapping and validate
+            String prevMapStr = map.get(chp);
+            
+            if(str.length() >= prevMapStr.length()) {
+                String strToBeMatched = str.substring(0, prevMapStr.length());
+                String strForwarded = str.substring(prevMapStr.length());
+                // System.out.print("chp: "+chp +" str: "+prevMapStr+" ");
+                
+                if(prevMapStr.equals(strToBeMatched)) {
+                    solution(strForwarded, restPattern, map, origPat);
+                }
+            }
+        }else {
+            for(int i=0; i < str.length(); i++) {
+                String mapMe = str.substring(0, i+1);
+                String forwardMe = str.substring(i+1);
+                // System.out.print("chp: "+chp +" str: "+mapMe+" ");
+                map.put(chp, mapMe);
+                solution(forwardMe, restPattern, map, origPat);
+                map.remove(chp);
+            }
+        }
+
+    }
+    
+    
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        String str = scn.next();
+        String pattern = scn.next();
+        HashMap < Character, String > map = new HashMap < > ();
+        solution(str, pattern, map, pattern);
+    }
+}
