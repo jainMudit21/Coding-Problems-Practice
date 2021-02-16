@@ -1,0 +1,27 @@
+URL: https://leetcode.com/problems/word-break/
+
+//RECURSIVE SOLUTION without DP (might give TLE)
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> hs = new HashSet<String>(wordDict);
+        
+        return wordBreak(s, hs);
+    }
+    
+    public boolean wordBreak(String str, Set<String> hs) {
+        if(str.length() == 0) {
+            return true;
+        }
+        
+        for(int j=0; j < str.length(); j++) {
+            if(hs.contains(str.substring(0, j+ 1))) {
+                if(wordBreak(str.substring(j+1), hs)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+}
