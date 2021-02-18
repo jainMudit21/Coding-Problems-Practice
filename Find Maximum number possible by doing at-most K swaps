@@ -1,0 +1,59 @@
+URL: https://www.geeksforgeeks.org/find-maximum-number-possible-by-doing-at-most-k-swaps/
+
+//RECURSIVE SOLUTION
+//Time: O((n^2)^k)
+//n is length of string and k is number of swaps allowed
+
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/largest-number-at-most-k-swaps-official/ojquestion
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    
+    public static String swap(String s, int i, int j) {
+        char ith = s.charAt(i);
+        char jth = s.charAt(j);
+        
+        String left = s.substring(0, i);
+        String mid = s.substring(i+1, j);
+        String right = s.substring(j+1);
+        
+        return left + jth + mid + ith + right;
+    }
+
+	static String max;
+	public static void findMaximum(String str, int k) {
+		//write your code here
+		if(str.compareTo(max) > 0) {
+		    max = str;
+		}
+		
+		
+		if(k == 0) {
+		    return;
+		}
+		
+		for(int i=0; i < str.length()-1; i++) {
+		    for(int j=i+1; j < str.length(); j++) {
+		        if(str.charAt(j) > str.charAt(i)) {
+		            //swap and recurse
+		            str = swap(str, i, j);
+		            findMaximum(str, k-1);
+		            str = swap(str, i, j);
+		        }
+		    }
+		}
+	}
+	
+	
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		String str = scn.next();
+		int k = scn.nextInt();
+		 max = str;
+		findMaximum(str, k);
+		System.out.println(max);
+	}
+
+}
