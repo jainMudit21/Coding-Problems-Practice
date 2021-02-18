@@ -57,3 +57,114 @@ public class Main {
 	}
 
 }
+
+
+
+
+
+//RECURSIVE EFFICIENT SOLUTION
+//TIME: O(n^k)
+URL: https://practice.geeksforgeeks.org/problems/largest-number-in-k-swaps-1587115620/1#
+
+// { Driver Code Starts
+import java.io.*;
+import java.util.*;
+class GfG
+{
+    public static void main(String args[])throws IOException
+        {
+            Scanner sc = new Scanner(System.in);
+            int t = sc.nextInt();
+            while(t-->0)
+                {
+                    int k = sc.nextInt();
+                    String str = sc.next();
+                    Sol obj = new Sol();
+                    System.out.println(obj.findMaximumNum(str, k));
+                }
+        }
+}// } Driver Code Ends
+
+
+class Sol
+{
+    public static String findMaximumNum(String str, int k)
+        {
+            //code here.
+            findMaximum(str, k, 0);
+            // System.out.println(max);
+            String ans = max;
+            max = "";
+            return ans;
+        }
+        
+    static String max = "";
+        
+    
+    public static void findMaximum(String str, int k, int curIdx) {
+		//write your code here
+		if(str.compareTo(max) > 0) {
+		    max = str;
+		  //  System.out.println(max);
+		}
+		
+		
+		if(k == 0) {
+		    return;
+		}
+		
+		if(curIdx == str.length()) {
+		    return;
+		}
+		
+		
+		int maxNumIdx = findMax(str, curIdx);
+		char maxDig = str.charAt(maxNumIdx);
+		
+		if(maxNumIdx == curIdx) {
+		    findMaximum(str, k, curIdx + 1);
+		}else {
+		    for(int i=curIdx; i < str.length(); i++) {
+		        
+		        if(maxDig == str.charAt(i)) {
+		            str = swap(str, curIdx, i);
+		            findMaximum(str, k-1, curIdx + 1);
+		            str = swap(str, curIdx, i);
+		        }
+		    }
+		}
+		
+		
+	}
+
+    public static String swap(String s, int i, int j) {
+        char ith = s.charAt(i);
+        char jth = s.charAt(j);
+        
+        String left = s.substring(0, i);
+        String mid = s.substring(i+1, j);
+        String right = s.substring(j+1);
+        
+        return left + jth + mid + ith + right;
+    }
+    
+    public static int findMax(String s, int start) {
+        if(start == s.length()-1) {
+            return start;
+        }
+        
+        int index = start;
+        char max = s.charAt(start);
+        
+        for(int i=start; i < s.length(); i++) {
+            if(s.charAt(i) > max) {
+                max = s.charAt(i);
+                index = i;
+            }
+        }
+        
+        return index;
+    }
+
+    
+}
