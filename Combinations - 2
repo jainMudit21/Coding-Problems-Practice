@@ -1,0 +1,35 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/combinations-2-official/ojquestion
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+  public static void combinations(boolean[] boxes, int ci, int ti, int lb) {
+      
+    if(ci > ti) {
+        for(boolean val: boxes) {
+            System.out.print(val ? "i":"-");
+        }
+        System.out.println();
+        return;
+    }
+    
+    for(int b = lb + 1; b < boxes.length; b++) {
+        if(!boxes[b]) {
+            boxes[b] = true;
+            combinations(boxes, ci + 1, ti, b);
+            boxes[b] = false;
+        }
+    }
+    
+  }
+
+  public static void main(String[] args) throws Exception {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    int nboxes = Integer.parseInt(br.readLine());
+    int ritems = Integer.parseInt(br.readLine());
+    combinations(new boolean[nboxes], 1, ritems, -1);
+  }
+
+}
