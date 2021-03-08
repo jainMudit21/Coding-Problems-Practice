@@ -25,3 +25,62 @@ class Solution {
         return false;
     }
 }
+
+
+//DP Solution
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> hs = new HashSet<String>(wordDict);
+        
+        return wordBreak(s, hs);
+    }
+    
+    public boolean wordBreak(String str, Set<String> hs) {
+        int dp[] = new int[str.length()];
+	    
+	    
+	    for(int i=0; i < str.length(); i++) {
+	        for(int j=0; j<= i; j++) {
+	            String sub = str.substring(j, i + 1);
+	            if(hs.contains(sub)) {
+	                if(j == 0) {
+	                    dp[i] += 1;
+	                    continue;
+	                }
+	                dp[i] += dp[j-1];
+	            }
+	        }
+	    }
+	    
+	    return dp[dp.length-1] != 0;
+    }
+}
+
+
+//More Optimized Solution
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        return dfs(s, 0, wordDict, new Boolean[s.length()]);
+    }
+    
+    private boolean dfs(String s, int currIndex, List<String> words, Boolean[] memo) {
+        if (currIndex == s.length()) {
+            return true;
+        }
+        
+        if (memo[currIndex] != null) return memo[currIndex];
+        
+        for (String word : words) {
+            if (s.startsWith(word, currIndex)) {
+                if (dfs(s, currIndex + word.length(), words, memo)) {
+                    memo[currIndex] = true;
+                    return true;
+                }
+            }
+        }
+        
+        memo[currIndex] = false;
+        return false;
+    }
+}
