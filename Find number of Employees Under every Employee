@@ -1,0 +1,73 @@
+URL: https://www.geeksforgeeks.org/find-number-of-employees-under-every-manager/
+
+//For running testcases
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/hashmap-and-heaps/number-of-employees-under-every-manager-official/ojquestion#!
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args){
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        
+        HashMap<String, String> map = new HashMap<>();
+        
+        while(n-- > 0) {
+            map.put(scn.next(), scn.next());
+        }
+        
+        displayCount(map);
+    }
+    
+    public static void displayCount(HashMap<String, String> map) {
+        
+        HashMap<String, HashSet<String>> tree = new HashMap<>();
+        
+        String ceo = "";
+        
+        for(String key: map.keySet()) {
+            String boss = map.get(key);
+            
+            if(boss.equals(key)) {
+                //ceo found
+                ceo = boss;
+                continue;
+            }
+            
+            HashSet<String> emps = tree.getOrDefault(boss, new HashSet<String>());
+            
+            emps.add(key);
+            tree.put(boss, emps);
+        }
+        
+        
+        //find count of all reportees to manager recursively
+        HashMap<String, Integer> answer = new HashMap<>();
+        getCount(tree, ceo, answer);
+        
+        for(String emp : answer.keySet() ) {
+            System.out.println(emp + " " + answer.get(emp));
+        }
+        
+    }
+    
+    public static int getCount(HashMap<String, HashSet<String>> tree, String man, HashMap<String, Integer> answer) {
+        
+        if(!tree.containsKey(man)) {
+            answer.put(man, 0);
+            return 1;
+        }
+        
+        
+        int size = 0;
+        for(String emp: tree.get(man)) {
+            size += getCount(tree, emp, answer);
+        }
+        
+        answer.put(man, size);
+        return size + 1;
+    }
+    
+}
