@@ -1,0 +1,66 @@
+URL: https://www.geeksforgeeks.org/find-itinerary-from-a-given-list-of-tickets/
+
+//For running testcases
+https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/hashmap-and-heaps/find-itinerary-from-tickets-official/ojquestion
+
+
+/*
+Expected Input:
+4
+Chennai Banglore 
+Bombay Delhi 
+Goa Chennai 
+Delhi Goa 
+
+Expected Output:
+Bombay -> Delhi -> Goa -> Chennai -> Banglore.
+
+*/
+
+
+//Using hashmap
+import java.util.*;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		int noofpairs_src_des = scn.nextInt();
+		HashMap<String, String> map = new HashMap<>();
+		for (int i = 0; i < noofpairs_src_des; i++) {
+			String s1 = scn.next();
+			String s2 = scn.next();
+			map.put(s1, s2);	
+		}
+		
+		HashMap<String, Boolean> psrc = new HashMap<>(); //Potential source hashmap
+		
+		for(String src : map.keySet()) {
+		    String dest = map.get(src);
+		    
+		    psrc.put(dest, false); //Destination can never be source
+		    
+		    if(psrc.containsKey(src) == false) {
+		        psrc.put(src, true);
+		    }
+		    
+		}
+		
+		String src = "";
+		for(String s: psrc.keySet()) {
+		    if(psrc.get(s) == true) {
+		        src = s;
+		        break;
+		    }
+		}
+		
+		while(true) {
+		    if(map.containsKey(src)) {
+		        System.out.print(src + " -> ");
+		        src = map.get(src);
+		    }else {
+		        System.out.print(src+".");
+		        break;
+		    }
+		}
+	}
+}
