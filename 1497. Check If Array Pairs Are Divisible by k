@@ -1,0 +1,67 @@
+URL: https://leetcode.com/problems/check-if-array-pairs-are-divisible-by-k/
+
+URL: https://practice.geeksforgeeks.org/problems/array-pair-sum-divisibility-problem3257/1#
+
+/*Approach:
+2 nums are divisible by k if both of their remainders(when divided by k) add up to k.
+
+Example: 10, 22 are nums and k = 8. Now, 10 % 8 = 2 and 22 % 8 = 6.
+10 + 22 = 32 which is divisible by 8. It happened only because 2 + 6 was equal to 8.
+
+Check with any two nums and k. It will hold true.
+3 cases of remainders:
+1. remainder is 0. (divisible already)
+2. remainder is k/2 (in case of even k)
+3. remainder lies in (0, k). (excluding above 2 options).
+
+From above information, a pair can be created if we can find 2 remainders x and y, for which
+x + y = k OR x = y = 0 OR x = y = k/2;
+
+Steps:
+1. We will create a HashMap with remainder as key and count of numbers with that remainder as value.
+2. Traverse the hashmap, for every rem (x) if rem (k-x) exists in hashmap and their values are same, then
+we have a pair, if not return false.
+
+Special Cases: 
+if rem is 0 or k/2 then pair has to be made with the same rem only. Therefore, count of nums with that rem should be even else return false.
+*/
+
+
+class Solution {
+    public boolean canArrange(int[] arr, int k) {
+        
+        //Create a hashmap for storing remainder and the count of numbers with that remainder
+        HashMap<Integer, Integer> rfmap = new HashMap<>();
+	    
+        // Handle negative remainders, suppose if k = 7, and num1 = 10, num2 = -10.
+        // Now, 10 and -10 sum up to 0 which is divisible by 7. 
+        // 10 % 7 == 3, and -10 % 7 = -3, Since we cant store -3(in array), we can add k to it.
+        // Therefore, -3 + 7 = 4. We will increment count in 4 for num2.
+	    for(int val: arr) {
+	        int rem = ((val % k) + k) % k; //handled negative value
+	        rfmap.put(rem, rfmap.getOrDefault(rem, 0) + 1);//incrementing count
+	    }
+	    
+	    for(int val :  arr) {
+	        int rem = ((val % k) + k) % k;
+	        
+            //special case
+	        if(rem == 0 || 2*rem == k) {
+	            if(rfmap.get(rem) % 2 == 1) {
+	                return false;
+	            }
+	        }
+            //Usual case
+	        else {
+	            int fq = rfmap.get(rem);
+	            int ofq = rfmap.getOrDefault(k-rem, 0);
+	            if(fq != ofq) {
+	                return false;
+	            }
+	        }
+	    }
+        
+        //we reached the end, that means we can create a value.
+	    return true;
+    }
+}
