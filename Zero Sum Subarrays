@@ -1,0 +1,64 @@
+URL: https://practice.geeksforgeeks.org/problems/zero-sum-subarrays1825/1#
+
+// { Driver Code Starts
+//Initial Template for Java
+
+/*package whatever //do not write package name here */
+
+import java.io.*;
+import java.util.*;
+class GFG {
+	public static void main (String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int t=sc.nextInt();
+		sc.nextLine();
+		while(t-->0)
+		{
+		    int n;
+		    n=sc.nextInt();
+		    
+		    int arr[]=new int[n];
+	
+		    
+		    for(int i=0;i<n;i++)
+		    {
+		        arr[i]=sc.nextInt();
+		    }
+
+		    System.out.println(findSubarray(arr,n));
+		}
+		
+	}
+
+ // } Driver Code Ends
+//User function Template for Java
+
+//Function to count subarrays with sum equal to 0.
+public static int findSubarray(int[] arr ,int n) 
+{
+    int count = 0;
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		int sum = 0;
+		hm.put(0, 1); //sum -> count of Sum mapping, 0 sum exists at -1 index
+		for(int i=0; i < arr.length; i++) {
+		    sum += arr[i];
+		    
+		    if(hm.containsKey(sum)) {
+		        count += hm.get(sum);
+		        hm.put(sum, hm.get(sum) + 1);
+		    }else {
+		        hm.put(sum, 1);
+		    }
+		}
+		
+		return count;
+}
+    
+
+
+
+// { Driver Code Starts.
+
+
+}
+  // } Driver Code Ends
