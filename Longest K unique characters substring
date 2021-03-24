@@ -1,0 +1,55 @@
+URL: https://practice.geeksforgeeks.org/problems/longest-k-unique-characters-substring0853/1#
+
+class Solution {
+    public int longestkSubstr(String str, int k) {
+		int max = -1;
+		
+		int i = -1;
+		int j = -1;
+		HashMap<Character, Integer> map = new HashMap<>();
+		while(true) {
+		    boolean f1 = false;
+		    boolean f2 = false;
+		    
+		    //acquire
+		    while(i < str.length() - 1) {
+		        f1 = true;
+		        i++;
+		        
+		        char ch = str.charAt(i);
+		        map.put(ch, map.getOrDefault(ch, 0) + 1);
+		        
+		        if(map.size() > k) {
+		            break;
+		        }
+		        
+		        if(map.size() == k) {
+		            max = Math.max(i - j, max);
+		        }
+		    }
+		    
+		    while(j < i) {
+		        f2 = true;
+		        j++;
+		        
+		        char ch = str.charAt(j);
+		        
+		        map.put(ch, map.get(ch) - 1);
+		        if(map.get(ch) == 0) {
+		            map.remove(ch);
+		        }
+		        
+		        if(map.size() == k) {
+		            max = Math.max(i-j, max);
+		            break;
+		        }
+		    }
+		    
+		    if(f1 == false && f2 == false) {
+		        break;
+		    }
+		}
+		
+		return max;
+    }
+}
