@@ -1,0 +1,61 @@
+URL: https://practice.geeksforgeeks.org/problems/equivalent-sub-arrays3731/1#
+
+
+
+class Solution
+{ 
+    // Method to calculate distinct sub-array 
+    static int countDistinctSubarray(int arr[], int n) 
+    { 
+        HashSet<Integer> hs = new HashSet<>();
+	    for(int x: arr) {
+	        hs.add(x);
+	    }
+	    int k = hs.size();
+	    hs.clear();
+	    
+	    HashMap<Integer, Integer> map = new HashMap<>();
+	    int i=-1;
+	    int j=-1;
+	    int ans = 0;
+	    
+	    while(true) {
+	        boolean f1 = false;
+	        boolean f2 = false;
+	        
+	        while(i < arr.length - 1) {
+	            f1 =  true;
+	            i++;
+	            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+	            
+	            if(map.size() == k) {
+	                ans += arr.length - i;
+	                break;
+	            }
+	        }
+	        
+	        
+	        while(j < i) {
+	            f2 = true;
+	            j++;
+	            
+	            map.put(arr[j], map.get(arr[j]) - 1);
+	            if(map.get(arr[j]) == 0)
+	                map.remove(arr[j]);
+	           
+	            
+	            if(map.size() < k) {
+	                break;
+	            }else {
+	                ans += arr.length - i;
+	            }
+	        }
+	        
+	        if(f1 == false && f2 == false) {
+	            break;
+	        }
+	    }
+	    
+	    return ans;
+    }
+}
