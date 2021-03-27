@@ -1,0 +1,293 @@
+URL: https://leetcode.com/problems/subarrays-with-k-different-integers/
+
+class Solution {
+    public int subarraysWithKDistinct(int[] arr, int k) {
+	    if(k == 1) {
+	        return solution(arr);
+	    }
+		
+		HashMap<Integer, Integer> mapb = new HashMap<>();
+		HashMap<Integer, Integer> maps = new HashMap<>();
+		
+		int is = -1;
+		int ib = -1;
+		int j = -1;
+		int count = 0;
+		
+		while(true) {
+		    boolean f1 = true;
+		    boolean f2 = true;
+		    boolean f3 = true;
+		    
+		    while(ib < arr.length-1) {
+		        f1 = false;
+		        ib++;
+		        
+		        int ch = arr[ib];
+		        mapb.put(ch, mapb.getOrDefault(ch, 0) + 1);
+		        
+		        if(mapb.size() > k) {
+		            remove(mapb, ch);
+		            ib--;
+		            break;
+		        }
+		    }
+		    
+		    while(is < ib) {
+		        f2 = false;
+		        is++;
+		        
+		        int ch = arr[is];
+		        maps.put(ch, maps.getOrDefault(ch, 0) + 1);
+		        
+		        if(maps.size() == k) {
+		            remove(maps, ch);
+		            is--;
+		            break;
+		        }
+		    }
+		    
+		    while(j < is) {
+		        f3 = false;
+		        
+		        if(mapb.size() == k && maps.size() == k-1) {
+		            count += ib-is;
+		        }
+		        
+		        j++;
+		        int ch = arr[j];
+		        remove(mapb, ch);
+		        remove(maps, ch);
+		        
+		        if(mapb.size() < k || maps.size() < k-1) {
+		            break;
+		        }
+		    }
+		    
+		    if(f1 && f2 && f3 ) {
+		        break;
+		    }
+		}
+		
+		return count;
+    }
+    
+    void remove(HashMap<Integer, Integer> map, int ch) {
+	    if(map.get(ch) == 1) {
+	        map.remove(ch);
+	        return;
+	    }
+	    
+	    map.put(ch, map.get(ch) - 1);
+	}
+    
+    int solution(int arr[]) {
+        
+        int count = 0;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int i = -1;
+        int j = -1;
+        
+        while(true) {
+            boolean f1 = true;
+            boolean f2 = true;
+            
+            while(i < arr.length - 1) {
+                f2 = false;
+                i++;
+                
+                int ch = arr[i];
+                map.put(ch, map.getOrDefault(ch, 0) + 1);
+                
+                if(map.size() == 2) {
+                    remove(map, ch);
+                    i--;
+                    break;
+                }
+            }
+            
+            while(j < i) {
+                f2 = false;
+                
+                if(map.size() == 1) {
+                    count += i-j;
+                }
+                
+                j++;
+                int ch = arr[j];
+                remove(map, ch);
+                
+                if(map.size() == 0) {
+                    break;
+                }
+            }
+            
+            if(f1 && f2)
+                break;
+        }
+        
+        
+        return count;
+    }
+}
+
+
+
+URL: https://practice.geeksforgeeks.org/problems/count-number-of-substrings4528/1#
+
+
+class Sol
+{
+    long substrCount (String str, int k)
+    {
+        
+	    if(k == 1) {
+	        return solution(str);
+	    }
+		
+		int mapb[] = new int[26];
+		int maps[] = new int[26];
+		
+		int is = -1;
+		int ib = -1;
+		int j = -1;
+		long count = 0;
+		int m1 = 0;
+		int m2 = 0;
+		
+		while(true) {
+		    boolean f1 = true;
+		    boolean f2 = true;
+		    boolean f3 = true;
+		    
+		    while(ib < str.length()-1) {
+		        f1 = false;
+		        ib++;
+		        
+		        char ch = str.charAt(ib);
+		        int ind = ch - 'a';
+		        mapb[ind]++;
+		        if(mapb[ind] == 1) {
+		            m1++;
+		        }
+		        
+		        if(m1 > k) {
+		            m1--;
+		            mapb[ind]--;
+		            ib--;
+		            break;
+		        }
+		    }
+		    
+		    while(is < ib) {
+		        f2 = false;
+		        is++;
+		        
+		        char ch = str.charAt(is);
+		        int ind = ch - 'a';
+		        maps[ind]++;
+		        
+		        if(maps[ind] == 1) {
+		            m2++;
+		        }
+		        
+		        if(m2 == k) {
+		            maps[ind]--;
+		            m2--;
+		            is--;
+		            break;
+		        }
+		    }
+		    
+		    while(j < is) {
+		        f3 = false;
+		        
+		        if(m1 == k && m2 == k-1) {
+		            count += ib-is;
+		        }
+		        
+		        j++;
+		        char ch = str.charAt(j);
+		        int ind = ch - 'a';
+		        mapb[ind]--;
+		        maps[ind]--;
+		        
+		        if(mapb[ind] == 0) {
+		            m1--;
+		        }
+		        if(maps[ind] == 0) {
+		            m2--;
+		        }
+		        
+		        if(m1 < k || m2 < k-1) {
+		            break;
+		        }
+		    }
+		    
+		    if(f1 && f2 && f3 ) {
+		        break;
+		    }
+		}
+		
+		return count;
+    }
+    
+    void remove(HashMap<Character, Integer> map, char ch) {
+	    if(map.get(ch) == 1) {
+	        map.remove(ch);
+	        return;
+	    }
+	    
+	    map.put(ch, map.get(ch) - 1);
+	}
+	
+	
+	long solution(String str) {
+        long count = 0;
+        
+        HashMap<Character, Integer> map = new HashMap<>();
+        int i = -1;
+        int j = -1;
+        
+        while(true) {
+            boolean f1 = true;
+            boolean f2 = true;
+            
+            while(i < str.length() - 1) {
+                f2 = false;
+                i++;
+                
+                char ch = str.charAt(i);
+                map.put(ch, map.getOrDefault(ch, 0) + 1);
+                
+                if(map.size() == 2) {
+                    remove(map, ch);
+                    i--;
+                    break;
+                }
+            }
+            
+            while(j < i) {
+                f2 = false;
+                
+                if(map.size() == 1) {
+                    count += i-j;
+                }
+                
+                j++;
+                char ch = str.charAt(j);
+                remove(map, ch);
+                
+                if(map.size() == 0) {
+                    break;
+                }
+            }
+            
+            if(f1 && f2)
+                break;
+        }
+        
+        return count;
+    }
+}
