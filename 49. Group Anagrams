@@ -1,0 +1,43 @@
+URL: https://leetcode.com/problems/group-anagrams/
+
+//GeeksForGeeks
+URL: https://practice.geeksforgeeks.org/problems/print-anagrams-together/1#
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        
+        HashMap<HashMap<Character, Integer>, ArrayList<String>> bmap = new HashMap<>();
+	    
+	    for(String str: strs) {
+	        
+	        HashMap<Character, Integer> fmap = new HashMap<>();
+	        for(char ch: str.toCharArray()) {
+	            fmap.put(ch, fmap.getOrDefault(ch, 0) + 1);
+	        }
+	        
+	        
+	        if(bmap.containsKey(fmap) ) {
+	            
+	            ArrayList<String> list = bmap.get(fmap);
+	            list.add(str);
+	            
+	        }else {
+	            
+	            ArrayList<String> list = new ArrayList<>();
+	            list.add(str);
+	            bmap.put(fmap, list);
+	            
+	        }
+	    }
+	    
+	    
+	    List<List<String>> res = new ArrayList<>();
+	    for(ArrayList<String> li: bmap.values() ) {
+	        res.add(li);
+	    }
+	    
+	    return res;
+        
+        
+    }
+}
