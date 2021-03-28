@@ -1,0 +1,31 @@
+URL: https://practice.geeksforgeeks.org/problems/check-if-two-strings-are-k-anagrams-or-not/1#
+
+class GfG
+{
+      boolean areKAnagrams(String s1, String s2, int k)
+     {
+         if(s1.length() != s2.length()){
+	        return false;
+	    }
+	    
+	    int arr1[] = new int[26];
+	    
+	    for(char ch: s1.toCharArray() ) {
+	        arr1[ch - 'a']++;
+	    }
+	    
+	    int total = 0;
+	    for(int i=0; i < s2.length(); i++) {
+	        int ind = s2.charAt(i) - 'a';
+	        if(arr1[ind] != 0) {
+	            arr1[ind]--;
+	        }
+	    }
+	    
+	    for(int i=0; i < arr1.length; i++) {
+	        total = total + (arr1[i] != 0 ? arr1[i] : 0);
+	    }
+	    
+	    return total <= k;
+     }
+}
