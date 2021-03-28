@@ -1,0 +1,83 @@
+URL: https://leetcode.com/problems/find-all-anagrams-in-a-string/
+
+//GeeksForGeeks
+URL: https://practice.geeksforgeeks.org/problems/count-occurences-of-anagrams5839/1#
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        
+        if(p.length() > s.length()) {
+            return new ArrayList<>();
+        }
+        
+        int parr[] = new int[26];
+        int sarr[] = new int[26];
+        
+        for(char ch: p.toCharArray()) {
+            parr[ch-'a']++;
+        }
+        
+        int i=0;
+        for(; i < p.length(); i++) {
+            sarr[s.charAt(i)-'a']++;
+        }
+        int j = 0; //i-p.length()
+        List<Integer> ans = new ArrayList<>();
+        
+        while(i < s.length()) {
+            if(compare(parr, sarr)) {
+                ans.add(j);
+            }
+            
+            //acquire
+            sarr[s.charAt(i) - 'a']++;
+            
+            //release
+            sarr[s.charAt(j) - 'a']--;
+            
+            i++;
+            j++;
+        }
+        
+        if(compare(parr, sarr)) {
+            ans.add(j);
+        }
+        
+        return ans;
+    }
+    
+    boolean compare(int parr[], int sarr[]) {
+        return Arrays.equals(parr, sarr);
+    }
+}
+
+
+
+//More Optimized Solution
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        int[] map = new int[26];
+        for(int i=0;i<p.length();++i) {
+            map[p.charAt(i)-'a']++;
+        }
+        
+        List<Integer> res = new ArrayList<>();
+        for(int i=0,j=0;i<s.length();++i) {
+            int idx = s.charAt(i) - 'a';
+            map[idx]--; // add the new character
+            if(i>=p.length()) map[s.charAt(j++)-'a']++; // if the length is greater than windows length, pop the left character in the window
+            
+            boolean finish = true;
+            for(int k=0;k<26;k++) 
+                if(map[k]!=0){ // if it is not an anagram of string p
+                    finish = false;
+                    break;
+                }
+            
+            if(finish)
+                res.add(j);
+        }
+        return res;
+    }
+    
+}
