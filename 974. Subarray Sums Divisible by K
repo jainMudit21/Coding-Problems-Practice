@@ -1,0 +1,31 @@
+URL: https://leetcode.com/problems/subarray-sums-divisible-by-k/
+
+//GeeksForGeeks
+URL: https://practice.geeksforgeeks.org/problems/sub-array-sum-divisible-by-k2617/1
+
+
+class Solution {
+    public int subarraysDivByK(int[] arr, int k) {
+        
+        int map[] = new int[k];
+        map[0] = 1;
+        
+        int count = 0;
+        int sum = 0;
+        for(int i=0; i < arr.length; i++) {
+            
+            sum += arr[i];
+            int rem = sum % k;
+            if(rem < 0) {
+                rem += k;
+            }
+            
+            count += map[rem];
+            
+            map[rem]++;
+        }
+        
+        return count;
+    }
+}
+
