@@ -1,0 +1,35 @@
+URL: https://leetcode.com/problems/word-pattern/
+
+class Solution {
+    public boolean wordPattern(String pattern, String str) {
+
+		String words[] = str.split(" ");
+		if(words.length != pattern.length()) {
+		    return false;
+		}
+		
+		HashMap<Character, String> map1 = new HashMap<>();
+		HashMap<String, Boolean> map2 = new HashMap<>();
+		
+		for(int i=0; i < pattern.length(); i++) {
+		    
+		    char ch = pattern.charAt(i);
+		    String word = words[i];
+		    
+		    if(map1.containsKey(ch)) {
+		        if(!map1.get(ch).equals(word)) {
+		            return false;
+		        }
+		    }else {
+		        if(map2.containsKey(word)) {
+		            return false;
+		        }else {
+		            map1.put(ch, word);
+		            map2.put(word, true);
+		        }
+		    }
+		}
+		
+		return true;
+    }
+}
