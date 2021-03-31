@@ -1,0 +1,76 @@
+URL: https://leetcode.com/problems/isomorphic-strings/
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        
+		if(s.length() != t.length() ) {
+		    return false;
+		}
+		
+        int map1[] = new int[256];
+        boolean map2[] = new boolean[256];
+		
+		for(int i=0; i < s.length(); i++) {
+		    char c1 = s.charAt(i);
+		    char c2 = t.charAt(i);
+		    
+            if(map1[(int)c1] != 0) {
+                //contains something
+                if(map1[(int)c1] != (int)c2) {
+                    return false;
+                }
+            }else {
+                if(map2[(int)c2] == true) {
+                    return false;
+                }else {
+                    map1[(int)c1] = (int)c2;
+                    map2[(int)c2] = true;
+                }
+            }
+            
+		}
+		
+		return true;
+    }
+}
+
+
+
+
+URL: https://practice.geeksforgeeks.org/problems/isomorphic-strings-1587115620/1#
+
+class Solution{
+    // This function returns true if str1 and str2 are ismorphic
+    // else returns false
+    public static boolean areIsomorphic(String s,String t)
+    {
+        if(s.length() != t.length() ) {
+		    return false;
+		}
+		
+        int map1[] = new int[256];
+        boolean map2[] = new boolean[256];
+		
+		for(int i=0; i < s.length(); i++) {
+		    char c1 = s.charAt(i);
+		    char c2 = t.charAt(i);
+		    
+            if(map1[(int)c1] != 0) {
+                //contains something
+                if(map1[(int)c1] != (int)c2) {
+                    return false;
+                }
+            }else {
+                if(map2[(int)c2] == true) {
+                    return false;
+                }else {
+                    map1[(int)c1] = (int)c2;
+                    map2[(int)c2] = true;
+                }
+            }
+            
+		}
+		
+		return true;
+    }
+}
