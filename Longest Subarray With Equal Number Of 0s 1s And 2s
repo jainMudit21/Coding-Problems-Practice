@@ -1,0 +1,51 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/hashmap-and-heaps/longest-subarray-with-equal-number-of-0s-1s-and-2s-official/ojquestion
+
+import java.util.*;
+
+public class Main {
+
+    public static int solution(int[] arr) {
+        
+        HashMap<String, Integer> map = new HashMap<>();
+        int c1, c2, c0 = 0;
+        c1 = c2 = c0;
+        int d10, d21;
+        d10 = c1-c0;
+        d21 = c2- c1;
+        int len = 0;
+        
+        String key = d21 + "#" + d10;
+        map.put(key, -1);
+        
+        for(int i=0; i < arr.length; i++) {
+            
+            c0 = c0 + (arr[i] == 0 ? 1 : 0);
+            c1 = c1 + (arr[i] == 1 ? 1 : 0);
+            c2 = c2 + (arr[i] == 2 ? 1 : 0);
+            
+            d10 = c1 - c0;
+            d21 = c2 - c1;
+            key = d21 +"#"+ d10;
+            
+            if(map.containsKey(key)) {
+                len = Math.max(len, i - map.get(key));
+            }else {
+                map.put(key, i);
+            }
+            
+        }
+        
+        return len;
+    }
+    
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = scn.nextInt();
+        }
+        System.out.println(solution(arr));
+    }
+
+}
