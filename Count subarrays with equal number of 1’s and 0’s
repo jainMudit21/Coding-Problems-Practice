@@ -1,0 +1,28 @@
+URL: https://practice.geeksforgeeks.org/problems/count-subarrays-with-equal-number-of-1s-and-0s-1587115620/1#
+
+//Solution
+class Solution
+{
+    //Function to count subarrays with 1s and 0s.
+    static int countSubarrWithEqualZeroAndOne(int arr[], int n)
+    {
+        int sum = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int count = 0;
+        
+        map.put(0, 1);
+        for(int i=0; i < arr.length; i++) {
+            sum = sum + (arr[i] == 0 ? -1 : 1);
+            
+            if(map.containsKey(sum)) {
+                count += map.get(sum);
+                map.put(sum, map.get(sum) + 1);
+            }else {
+                map.put(sum, 1);
+            }
+        
+        }
+        
+        return count;
+    }
+}
