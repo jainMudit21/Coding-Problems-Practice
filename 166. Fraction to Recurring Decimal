@@ -1,0 +1,50 @@
+URL: https://leetcode.com/problems/fraction-to-recurring-decimal/
+
+//GeeksForGeeks
+URL: https://practice.geeksforgeeks.org/problems/a-simple-fraction0921/1#
+
+class Solution {
+    public String fractionToDecimal(int num, int den) {
+        StringBuilder sb = new StringBuilder();
+        
+        long n=num;
+        long d=den;
+        if( (n<0) ^ (d<0) && n != 0 )
+            sb.append("-");
+
+        n=Math.abs(n);
+        d=Math.abs(d); 
+        
+        long q = n/d;
+        long r = n % d;
+        sb.append(q);
+        
+        if(r == 0) {
+            return sb.toString();
+        }
+        //else case
+        
+        sb.append(".");
+        HashMap<Long, Integer> map = new HashMap<>();
+        // System.out.println(n +"   "+ d);
+        
+        while(r != 0) {
+            
+            if(map.containsKey(r)) {
+                int len = map.get(r);
+                sb.insert(len, "(");
+                sb.append(")");
+                break;
+            }else {
+                map.put(r, sb.length());
+                r *= 10;
+                q = r / d;
+                r = r % d;
+                sb.append(q);
+            }
+            
+        }
+        
+        return sb.toString();
+    }
+}
