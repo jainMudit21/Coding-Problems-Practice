@@ -1,0 +1,26 @@
+URL: https://leetcode.com/problems/rabbits-in-forest/
+
+class Solution {
+    public int numRabbits(int[] arr) {
+        HashMap<Integer, Integer> fmap = new HashMap<>();
+        
+        for(int x: arr) {
+            fmap.put(x, fmap.getOrDefault(x, 0) + 1);
+        }
+        
+        int total = 0;
+        for(int key: fmap.keySet()) {
+            
+            int val = fmap.get(key);
+            int temp = (val / (key + 1));
+            
+            if(val % (key + 1) != 0) {
+                temp++;
+            }
+            
+            total += (temp * (key+1));
+        }
+        
+        return total;
+    }
+}
