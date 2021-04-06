@@ -1,0 +1,38 @@
+URL: https://leetcode.com/problems/array-of-doubled-pairs/
+
+
+class Solution {
+    public boolean canReorderDoubled(int[] arr) {
+        if(arr.length == 0) {
+            return true;
+        }
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int val: arr) {
+            map.put(val, map.getOrDefault(val, 0) + 1);
+        }
+        
+        Integer ar[] = new Integer[arr.length]; // created because lambda function doesnt works on primitive int
+        for(int i=0; i < arr.length; i++) {
+            ar[i] = arr[i];
+        }
+        
+        Arrays.sort(ar, (a, b) -> { /* lambda function */
+           return Math.abs(a) - Math.abs(b); 
+        });
+        
+        for(Integer ele: ar) {
+            if(map.get(ele) == 0)
+                continue;
+            
+            if(map.getOrDefault(2 * ele, 0) == 0)
+                return false;
+                
+            map.put(ele, map.get(ele) - 1);
+            map.put(2*ele, map.get(2*ele) - 1);
+        }
+        
+        
+        return true;
+    }
+}
