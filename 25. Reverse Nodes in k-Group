@@ -1,0 +1,166 @@
+URL: https://leetcode.com/problems/reverse-nodes-in-k-group/
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if(head == null || head.next == null || k == 0) {
+            return head;
+        }
+        
+        ListNode oh = null, ot = null; //original head, original tail
+        int len = length(head);
+        ListNode curr = head;
+        while(len >= k) {
+            
+            int tempk = k;
+            while(tempk-- > 0) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                addFirstNode(curr);
+                curr = forw;
+            }
+            
+            if(oh == null) {
+                oh = th;
+                ot = tt;
+            }else {
+                ot.next = th;
+                ot = tt;
+            }
+            
+            th = tt = null;
+            len -= k;
+        }
+        
+        ot.next = curr;
+        return oh;
+    }
+    
+    public int length(ListNode head) {
+        int len = 0;
+        ListNode temp = head;
+        
+        while(temp != null) {
+            temp = temp.next;
+            len++;
+        }
+        
+        return len;
+    }
+
+
+    ListNode th = null;
+    ListNode tt = null;
+    
+    public void addFirstNode(ListNode node) {
+        if(th == null) {
+            th = node;
+            tt = node;
+        }else {
+            node.next = th;
+            th = node;
+        }
+    }
+    
+}
+
+
+//GeeksForGeeks
+URL: https://practice.geeksforgeeks.org/problems/reverse-a-linked-list-in-groups-of-given-size/1#
+
+
+class Solution
+{
+    public static Node reverse(Node head, int k)
+    {
+        if(head == null || head.next == null || k == 0) {
+            return head;
+        }
+        
+        Node oh = null, ot = null; //original head, original tail
+        int len = length(head);
+        Node curr = head;
+        while(len >= k) {
+            
+            int tempk = k;
+            while(tempk-- > 0) {
+                Node forw = curr.next;
+                curr.next = null;
+                addFirstNode(curr);
+                curr = forw;
+            }
+            
+            if(oh == null) {
+                oh = th;
+                ot = tt;
+            }else {
+                ot.next = th;
+                ot = tt;
+            }
+            
+            th = tt = null;
+            len -= k;
+        }
+        
+        Node rev = reverse(curr);
+        
+        ot.next = rev;
+        return oh;
+    }
+    
+    static Node reverse(Node head) {
+        if(head == null || head.next == null) {
+            return head;
+        }
+        
+        Node curr = head;
+        Node prev = null;
+        Node forw = null;
+        
+        while(curr != null) {
+            forw = curr.next;
+            
+            curr.next = prev;
+            prev = curr;
+            curr = forw;
+            
+        }
+        
+        return prev;
+    }
+    
+    static int length(Node head) {
+        int len = 0;
+        Node temp = head;
+        
+        while(temp != null) {
+            temp = temp.next;
+            len++;
+        }
+        
+        return len;
+    }
+    
+    static Node th = null;
+    static Node tt = null;
+    
+    static void addFirstNode(Node node) {
+        if(th == null) {
+            th = node;
+            tt = node;
+        }else {
+            node.next = th;
+            th = node;
+        }
+    }
+}
