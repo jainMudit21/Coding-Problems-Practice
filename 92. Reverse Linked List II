@@ -1,0 +1,83 @@
+URL: https://leetcode.com/problems/reverse-linked-list-ii/
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int si, int ei) {
+        if(si == ei) {
+            return head;
+        }
+        
+        ListNode curr = head;
+        ListNode revs = null;
+        ListNode reve = null;
+        ListNode revs_prev = null;
+        ListNode reve_next = null;
+        
+        int i=1;
+        while(curr != null && i <= ei) {
+            
+            if(i < si) {
+                revs_prev = curr;
+            }
+            
+            if(i == si) {
+                revs = curr;
+            }
+            
+            if(i == ei) {
+                reve = curr;
+                reve_next = curr.next;
+            }
+            
+            curr = curr.next;
+            i++;
+        }
+        
+        reve.next = null;
+        
+        reve = reverse(revs);
+        
+        if(revs_prev != null) {
+            revs_prev.next = reve;
+        }else {
+            head = reve;
+        }
+        
+        revs.next = reve_next;
+        return head;
+    }
+    
+    
+    public static ListNode reverse(ListNode head) {
+        
+        if(head == null || head.next == null) {
+            return head;
+        }
+        
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode forw = null;
+        
+        while(curr != null) {
+            forw = curr.next;
+            
+            curr.next = prev;
+            prev = curr;
+            curr = forw;
+            
+        }
+        
+        return prev;
+    }
+    
+}
