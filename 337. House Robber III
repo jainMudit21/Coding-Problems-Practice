@@ -1,0 +1,49 @@
+URL: https://leetcode.com/problems/house-robber-iii/
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int rob(TreeNode root) {
+        
+        HousePair res = houseRobberUtil(root);
+        
+        return Math.max(res.withRob, res.withoutRob);
+    }
+    
+    class HousePair {
+        int withRob = 0;
+        int withoutRob = 0;
+    }
+    
+    public HousePair houseRobberUtil(TreeNode root) {
+        
+        if(root == null) {
+            return new HousePair();
+        }
+        
+        HousePair left = houseRobberUtil(root.left);
+        HousePair right = houseRobberUtil(root.right);
+        
+        HousePair ans = new HousePair();
+        
+        ans.withRob = left.withoutRob + root.val + right.withoutRob;
+        ans.withoutRob = Math.max(left.withRob, left.withoutRob) + Math.max(right.withRob, right.withoutRob);
+        
+        return ans;
+        
+    }
+}
