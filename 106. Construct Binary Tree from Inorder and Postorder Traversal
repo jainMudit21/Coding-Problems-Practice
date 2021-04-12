@@ -1,0 +1,68 @@
+URL: https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+
+//geeksforgeeks
+URL: https://practice.geeksforgeeks.org/problems/tree-from-postorder-and-inorder/1#
+
+//Interview Bit
+URL: https://www.interviewbit.com/problems/binary-tree-from-inorder-and-postorder/
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        int si = 0;
+        int ei = inorder.length - 1;
+        post = inorder.length - 1;
+        return util(postorder, inorder, si, ei);
+    }
+    
+    
+    public int post;
+    
+    TreeNode util(int postorder[], int inorder[], int si, int ei) {
+
+        if(si > ei) {
+            post++;
+            return null;
+        }
+
+        TreeNode node = new TreeNode(postorder[post]);
+        int mid = find(inorder, postorder[post], si, ei);
+        
+
+        post--;
+        node.right = util(postorder, inorder, mid + 1, ei);
+
+        post--;
+        node.left = util(postorder, inorder, si, mid - 1);
+        
+
+        return node;
+
+    }
+    
+    int find(int inorder[], int ele, int si, int ei) {
+        
+        for(int i=si; i <= ei; i++) {
+            if(inorder[i] == ele) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
