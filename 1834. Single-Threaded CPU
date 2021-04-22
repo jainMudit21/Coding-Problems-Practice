@@ -1,0 +1,68 @@
+URL: https://leetcode.com/problems/single-threaded-cpu/
+
+class Solution {
+    public int[] getOrder(int[][] tasks) {
+        
+        /*
+        1. Sort all the tasks on the basis of arrival time
+        
+        2. Iterate over tasks array and insert all the tasks arrived till current time in Priority Queue.
+        
+        3. Remove tasks 1 by 1 from Priority Queue and add them in answer array.
+        
+        Priority Queue stores task in ascending order of processing times.
+        */
+        
+        int n = tasks.length;
+        
+        int strg[][] = new int[n][3]; //3 elements of every task. (index, arrival time, processing time)
+        
+        for(int i=0; i < n; i++) {
+            
+            strg[i][0] = i; //storing index
+            strg[i][1] = tasks[i][0]; //storing arrival time
+            strg[i][2] = tasks[i][1]; //storing processing time
+            
+        }
+        
+        //Step 1. Sorting arrays on basis of arrival time.
+        Arrays.sort(strg, (a, b) -> a[1] - b[1]); //2d array being sorted on basis of 1st column.
+        
+        // System.out.println(Arrays.deepToString(strg));
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a, b) -> a[2] == b[2] ? a[0] - b[0] : a[2] - b[2]); /*Arrays will be stored in prioriy queue. If 2 tasks have same processing time then
+        sort them on index else processing time.
+        */
+        
+        int ans[] = new int[n];
+        int ai = 0; // index of answer array
+        int ti = 0; // index of tasks array
+        
+        int currTime = 0;
+        while(ai < n) {
+            //Step 2. Iterate over tasks array and insert all the tasks arrived till current time in Priority Queue.
+            while(ti < n && strg[ti][1] <= currTime) {
+                pq.offer(strg[ti]);
+                ti++;
+            }
+            
+            //If there are no tasks at current time then set current Time as arrival time of 1st task in sorted array.
+            //and continue to next iteration
+            if(pq.isEmpty()) {
+                currTime = strg[ti][1];
+                continue;
+            }
+            
+            //Step 3. Remove tasks 1 by 1 from Priority Queue and add them in answer array and increment currTime with processed time;
+            int bestFit[] = pq.poll();
+            ans[ai] = bestFit[0];
+            currTime += bestFit[2];
+            
+            ai++;
+            
+        }
+        
+        return ans;
+    }
+    
+}
