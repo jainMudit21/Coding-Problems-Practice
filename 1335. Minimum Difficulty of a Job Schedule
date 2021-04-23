@@ -1,0 +1,59 @@
+URL: https://leetcode.com/problems/minimum-difficulty-of-a-job-schedule/
+
+class Solution {
+    public int minDifficulty(int[] diff, int d) {
+        
+        /* Question Explanation: 
+            
+            Cut the array into d subarrays and find minimum sum of maximum values in d subarrays.
+            
+        Basic Approach:
+            
+            try cutting array at every possible value and find the result.
+            Since, it would be a recursive solution, we can use dp[][] array to cache the results.
+        
+        */
+        
+        if(diff.length < d) {
+            return -1;
+        }
+        
+        int dp[][] = new int[diff.length][d + 1];
+        
+        //Since, values could be zero, better to fill the dp with -1
+        for(int[] x: dp) {
+            Arrays.fill(x, -1);
+        }
+        
+        return dfs(diff, d, dp, 0);
+        
+    }
+    
+    
+    private int dfs(int diff[], int remDays, int dp[][], int idx) {
+        
+        if(dp[idx][remDays] != -1) {
+            return dp[idx][remDays];
+        }
+        
+        if(remDays == 1) {
+            int max = 0;
+            for(int i=idx; i < diff.length; i++) {
+                max = Math.max(max, diff[i]);
+            }
+            dp[idx][remDays] = max;
+            return max;
+        }
+        
+        int max = 0;
+        int res = Integer.MAX_VALUE;
+        
+        for(int i=idx; i < diff.length - remDays + 1; i++) {
+            max = Math.max(max, diff[i]);
+            res = Math.min(res, max + dfs(diff, remDays - 1, dp, i + 1));
+        }
+        
+        dp[idx][remDays] = res;
+        return dp[idx][remDays];
+    }
+}
