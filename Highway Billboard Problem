@@ -1,0 +1,60 @@
+URL: https://www.geeksforgeeks.org/highway-billboard-problem/
+
+O(m) solution
+public static int solution(int m , int[] x, int[] rev, int t) {
+        
+    HashMap<Integer, Integer> map = new HashMap<>();
+    for(int i=0; i < x.length; i++) {
+        map.put(x[i], rev[i]);
+    }
+
+    int dp[] = new int[m + 1];
+    dp[0] = 0;
+
+    for(int i=1; i <= m; i++) {
+
+        if(map.containsKey(i) == false) {
+            dp[i] = dp[i-1];
+        }else {
+
+            int withBoard = map.get(i);
+            if(i > t+1) {
+                withBoard += dp[i - t - 1];
+            }
+
+            dp[i] = Math.max(withBoard, dp[i-1]);
+
+        }
+
+    }
+
+    return dp[m];
+
+}
+
+
+
+O(n^2) Solution
+
+public static int solution(int m , int[] x, int[] rev, int t) {
+       
+    int dp[] = new int[x.length];
+    dp[0] = rev[0];
+    int max = 0;
+
+    for(int i=1; i < dp.length; i++) {
+        int res = rev[i];
+        for(int j=0; j < i; j++) {
+
+            if(x[i] - x[j] > t) {
+                res = Math.max(res, rev[i] + dp[j]);
+            }
+        }
+
+        dp[i] = res;
+        max = Math.max(max, dp[i]);
+    }
+
+    return max;
+        
+}
