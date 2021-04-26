@@ -1,0 +1,38 @@
+URL: https://leetcode.com/problems/candy/
+
+//GeeksForGeeks
+URL: https://practice.geeksforgeeks.org/problems/temple-offerings2831/1#
+
+class Solution {
+    public int candy(int[] arr) {
+        int n = arr.length;
+		int tmpL[] = new int[n];
+		tmpL[0] = 1;
+		
+		for(int i=1; i < n; i++) {
+		    
+		    if(arr[i] > arr[i-1]) {
+		        tmpL[i] = tmpL[i-1] + 1;
+		    }else {
+		        tmpL[i] = 1;
+		    }
+		}
+		
+		int tmpR[] = new int[n];
+		tmpR[n-1] = 1;
+		for(int i = n-2; i>=0; i--) {
+		    if(arr[i] > arr[i+1]) {
+		        tmpR[i] = tmpR[i+1] + 1;
+		    }else {
+		        tmpR[i] = 1;
+		    }
+		}
+		
+		int ans = 0;
+		for(int i=0; i < n; i++) {
+		    ans += Math.max(tmpL[i], tmpR[i]);
+		}
+		
+		return ans;
+    }
+}
