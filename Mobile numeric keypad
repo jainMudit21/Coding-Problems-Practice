@@ -1,0 +1,48 @@
+URL: https://practice.geeksforgeeks.org/problems/mobile-numeric-keypad5456/1#
+
+class Solution
+{
+	public long getCount(int n)
+	{
+		
+		int data[][] = new int[][]{
+		    {0, 8},
+		    {1, 2, 4},
+		    {1, 2, 3, 5},
+		    {2, 3, 6},
+		    {1, 4, 5, 7},
+		    {2, 4, 5, 6, 8},
+		    {3, 5, 6, 9},
+		    {4, 7, 8},
+		    {5, 7, 8, 9, 0},
+		    {6, 8, 9}
+		};
+		
+		long dp[][] = new long[n+1][10];
+		
+		for(int i=1; i < dp.length; i++) {
+		    
+		    for(int j=0; j<= 9; j++) {
+		        
+		        if(i == 1) {
+		            dp[i][j] = 1;
+		        }else {
+		            //ith press of jth key will include (i-1)th press of keys adjacent to j
+		            for(int prev: data[j]) {
+		                dp[i][j] += dp[i-1][prev];
+		            }
+		            
+		        }
+		    }
+		}
+// 		System.out.println(Arrays.toString(dp[n]));
+		long ans = 0;
+		for(int j = 0; j < 10; j++) {
+		    ans += dp[n][j];
+		}
+		
+		return ans;
+		
+		
+	}
+}
