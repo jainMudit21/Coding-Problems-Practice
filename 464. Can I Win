@@ -1,0 +1,51 @@
+URL: 2https://leetcode.com/problems/can-i-win/
+
+class Solution {
+    public boolean canIWin(int n, int k) {
+        
+        if(k == 0) {
+            return true;
+        }
+        
+        int sum = n*(n+1)/2;
+        if(k > sum) {
+            return false;
+        }
+        
+        
+        HashMap<Integer, Boolean> dp = new HashMap<>();
+        return helper(n, k, dp, 0);
+        
+        
+    }
+    
+    public boolean helper(int n, int des, HashMap<Integer, Boolean> dp, int mask) {
+        
+        if(des <= 0) {
+            return false;//I am yet to take my turn but sum has already reached the target, therefore I lose
+        }
+        
+        if(dp.containsKey(mask)) {
+            return dp.get(mask);
+        }
+        
+        //let me try all the numbers available. Both players play optimally, that means if I want player1 to win, then player2 have to lose in every possible way, provided that p1 will choose the first move.
+        for(int i=0; i < n; i++) {
+            
+            if(((1 << i) & mask) == 0) {
+                //number has not been used earlier, so use it now
+                boolean ans = helper(n, des - i - 1, dp, mask | (1 << i));
+                if(!ans) {
+                    //the other player has returned false, therefore he lost. which means I have won
+                    dp.put(mask, true);
+                    return true;
+                }
+            }
+        }
+        
+        //either I cant pick any number or I havent won. Either way, I lost.
+        dp.put(mask, false);
+        return false;
+        
+    }
+}
