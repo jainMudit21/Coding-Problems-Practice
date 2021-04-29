@@ -1,0 +1,102 @@
+URL: https://leetcode.com/problems/cheapest-flights-within-k-stops/
+
+Approach:
+
+Create a graph with the information provided.
+Create a queue to do BFS. Put source vertice in queue.
+Loop until q has elements && value of maxStops is still positive.
+Remove 1 node at a time, check if its dest vertice. If not, then add its neighbours in q.
+Change minCost every time you reach dest vertice.
+After every iteration of 1 level, decrement maxStops.
+
+
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int maxStops) {
+        
+        ArrayList<Edge>[] graph = new ArrayList[n];
+        for(int i=0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        
+        for(int i=0; i < flights.length; i++) {
+            
+            int v1 = flights[i][0];
+            int v2 = flights[i][1];
+            int wt = flights[i][2];
+            
+            graph[v1].add(new Edge(v1, v2, wt));
+            
+        }
+        
+        // boolean vis[] = new boolean[n];
+        
+        Queue<Custom> q = new LinkedList<>();
+        q.add(new Custom(src, 0));
+        maxStops += 1;
+        int minCost = Integer.MAX_VALUE;
+        
+        
+        //Suppose you dont put maxStops in the while statement and add increment stops in custom object.
+        //Since, there will be cycles present in graph. To prevent cycles you will need boolean visited array.
+        //if you mark the vertice visited then you will not get any incoming edges on the same because we wont be
+        //visiting it again. If you do that, then the loop will run endlessly. So, better option is to do it this way.
+        while(!q.isEmpty() && maxStops >= 0) {
+            
+            int len = q.size();
+            // System.out.println("len: "+len);
+            
+            while(len-- > 0) {
+                
+                Custom node = q.remove();
+                
+                if(node.node == dst) {
+                    minCost = Math.min(minCost, node.cost);
+                    continue;
+                }
+
+                ArrayList<Edge> list = graph[node.node];
+                
+                for(Edge e : list) {
+
+                    if(node.cost + e.wt > minCost) {
+                        continue;
+                    }
+
+                    q.add(new Custom(e.nbr, node.cost + e.wt));
+
+                }
+                
+            }
+            
+            maxStops--;
+            
+        }
+        
+        return minCost == Integer.MAX_VALUE ? -1: minCost;
+        
+    }
+    
+    class Custom {
+        int node;
+        int cost;
+        
+        Custom(int node, int cost) {
+            this.node = node;
+            this.cost = cost;
+        }
+    }
+    
+    
+    
+    class Edge {
+        int src;
+        int nbr;
+        int wt;
+
+        Edge(int src, int nbr, int wt) {
+         this.src = src;
+         this.nbr = nbr;
+         this.wt = wt;
+        }
+    }
+}
