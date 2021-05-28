@@ -1,0 +1,56 @@
+URL: https://leetcode.com/problems/score-of-parentheses/
+
+/*
+Steps to perform:
+1. opening bracket: Just push into stack
+2. closing bracket: {
+	2.1. If top of stack is opening bracket that means base case "()" = 1 (just pop the opening bracket and push 1)
+	2.2. Else top of stack contains a number, then we need to add the numbers on top of stack until "(" is encountered. 
+		Case 2: (AB) = A + B; where A and B are numbers
+		Once added, then pop the "(" bracket and add twice of sum in above statement.
+		i.e. Suppose A + B = C therefore now we have Case 3: (C) = 2 * C;
+}
+3. After whole string is traversed, stack will contain number(s). Add them and return ans.
+
+Example: s = ()()
+i = 0, char =  (,  Stack : (      //pushed
+i = 1, char =  ),  Stack:  1     //pop and then push 1
+i = 2, char =  (,  Stack:  1 (   //pushed
+i = 3, char =  ),  Stack:  1 1  //pop and add 1
+
+After traversing the string, answer would be sum of elements in stack i.e. 2
+*/
+
+class Solution {
+    public int scoreOfParentheses(String s) {
+
+        Stack<Integer> st = new Stack<>();
+        //Since sum will always be of positive numbers, I have denoted ( with -1
+        for(int i=0; i < s.length(); i++) {
+            
+            if(s.charAt(i) == '(') { //opening bracket
+                st.push(-1);
+            }else {//closing bracket
+                if(st.peek() == -1) {
+					st.pop();
+					st.push(1);
+				}
+                else {
+					int val = 0;
+					while(st.peek() != -1) {
+						val += st.pop();
+					}
+					st.pop();
+					st.push(2*val);
+				}
+            }
+        }
+        
+        int val = 0;
+        while(st.size() > 0) {
+            val += st.pop();
+        }
+        
+        return val;
+    }
+}
