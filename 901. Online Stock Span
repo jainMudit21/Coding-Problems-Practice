@@ -1,0 +1,41 @@
+URL: https://leetcode.com/problems/online-stock-span/
+
+
+class StockSpanner {
+    
+    class Pair{
+        int price;
+        int index;
+
+        Pair(int price, int index) {
+            this.price = price;
+            this.index = index;
+        }
+    }
+
+    Stack<Pair> st;
+    int time = 0;
+
+    public StockSpanner() {
+        st = new Stack<>();
+        Pair base = new Pair(Integer.MAX_VALUE, -1);
+        st.push(base);
+    }
+    
+    public int next(int price) {
+        Pair p = new Pair(price, time++);
+            
+        while(st.peek().price <= p.price) {
+            st.pop();
+        }
+        int ans = p.index - st.peek().index;
+        st.push(p);
+        return ans;
+    }
+}
+
+/**
+ * Your StockSpanner object will be instantiated and called as such:
+ * StockSpanner obj = new StockSpanner();
+ * int param_1 = obj.next(price);
+ */
