@@ -1,0 +1,48 @@
+URL: https://leetcode.com/problems/exclusive-time-of-functions/
+
+class Solution {
+    public int[] exclusiveTime(int n, List<String> logs) {
+        
+        int arr[] = new int[n];
+        Stack<Pair> st = new Stack<>();
+        
+            
+        for(int i=0; i < logs.size(); i++) {
+            
+            String[] log = logs.get(i).split(":");
+            
+            if(log[1].equals("start")) {
+                Pair p = new Pair(Integer.parseInt(log[0]), Integer.parseInt(log[2]));
+                
+                st.push(p);
+            }else {
+                
+                Pair p = st.pop();
+                int interval = Integer.parseInt(log[2]) - p.st + 1;
+                int exTime = interval - p.ct;
+                arr[p.id] += exTime;
+                
+                if(st.size() > 0) {
+                    st.peek().ct += interval;
+                }
+                
+            }
+            
+        }
+        
+        return arr;
+        
+    }
+    
+    class Pair {
+        int id; //function id
+        int st; //start time 
+        int ct; //child time
+        
+        Pair(int id, int st) {
+            this.id = id;
+            this.st = st;
+            this.ct = 0;
+        }
+    }
+}
