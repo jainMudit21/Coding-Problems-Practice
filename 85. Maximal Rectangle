@@ -1,0 +1,63 @@
+URL: https://leetcode.com/problems/maximal-rectangle/
+
+//geeksforgeeks
+URL: https://practice.geeksforgeeks.org/problems/max-rectangle/1#
+
+//InterviewBit
+URL: https://www.interviewbit.com/problems/max-rectangle-in-binary-matrix/
+
+//Solution n^2
+
+class Solution {
+    public int maximalRectangle(char[][] ar) {
+        if(ar.length == 0)
+            return 0;
+        
+        int ans = 0;
+        int arr[] = new int[ar[0].length];
+        
+        for(int i=0; i < ar.length; i++) {
+            
+            for(int j=0; j < ar[i].length; j++) {
+                
+                if(ar[i][j] == '0')
+                    arr[j] = 0;
+                else
+                    arr[j] += 1;
+                
+            }
+            
+            ans = Math.max(ans, largeArea(arr));
+            
+        }
+        
+        return ans;
+        
+    }
+    
+    private int largeArea(int arr[]) {
+        Stack<Integer> st = new Stack<>();
+        
+        st.push(-1);
+        int maxArea = 0;
+        
+        for(int i=0; i <= arr.length; i++) {
+            
+            int val = (i == arr.length) ? 0: arr[i];
+            
+            while(st.peek() >= 0 && arr[st.peek()] >= val) {
+                
+                int rm = i;
+                int h = arr[st.pop()];
+                int lm = st.peek();
+                
+                maxArea = Math.max(maxArea, h * (rm - lm - 1));
+                
+            }
+            
+            st.push(i);
+        }
+        
+        return maxArea;
+    }
+}
