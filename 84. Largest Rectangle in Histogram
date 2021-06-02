@@ -1,0 +1,32 @@
+URL: https://leetcode.com/problems/largest-rectangle-in-histogram/
+
+URL: https://practice.geeksforgeeks.org/problems/maximum-rectangular-area-in-a-histogram-1587115620/1#
+
+
+class Solution {
+    public int largestRectangleArea(int[] arr) {
+        Stack<Integer> st = new Stack<>();
+        
+        st.push(-1);
+        int maxArea = 0;
+        
+        for(int i=0; i <= arr.length; i++) {
+            
+            int val = (i == arr.length) ? 0: arr[i];
+            
+            while(st.peek() >= 0 && arr[st.peek()] >= val) {
+                
+                int rm = i;
+                int h = arr[st.pop()];
+                int lm = st.peek();
+                
+                maxArea = Math.max(maxArea, h * (rm - lm - 1));
+                
+            }
+            
+            st.push(i);
+        }
+        
+        return maxArea;
+    }
+}
