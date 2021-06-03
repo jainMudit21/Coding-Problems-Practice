@@ -1,0 +1,26 @@
+URL: https://leetcode.com/problems/max-chunks-to-make-sorted-ii/
+
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        int n = arr.length;
+        int rmin[] = new int[n+1];
+        
+        rmin[n] = Integer.MAX_VALUE;
+        for(int i=n-1; i>=0; i--) {
+            rmin[i] = Math.min(arr[i], rmin[i+1]);
+        }
+        
+        int count = 0;
+        int leftMax = Integer.MIN_VALUE;
+        
+        for(int i=0; i < n; i++) {
+            leftMax = Math.max(leftMax, arr[i]);
+            
+            if(leftMax <= rmin[i+1]) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+}
