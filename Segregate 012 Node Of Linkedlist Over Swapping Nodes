@@ -1,0 +1,42 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/segregate-012-node-of-linkedlist-over-swapping-nodes/ojquestion
+
+
+public static ListNode segregate012(ListNode head) {
+        
+        if(head == null || head.next == null) {
+            return head;
+        }
+        
+    ListNode dum0 = new ListNode(-1);
+    ListNode dum1 = new ListNode(-1);
+    ListNode dum2 = new ListNode(-1);
+
+    ListNode p0 = dum0;
+    ListNode p1 = dum1;
+    ListNode p2 = dum2;
+
+    ListNode curr = head;
+
+    while(curr != null) {
+
+        if(curr.val == 0) {
+            p0.next = curr;
+            p0 = p0.next;
+        }else if(curr.val == 1) {
+            p1.next = curr;
+            p1 = p1.next;
+        }else {
+            p2.next = curr;
+            p2 = p2.next;
+        }
+
+        curr = curr.next;
+    }
+
+    p1.next = dum2.next;//first
+    p0.next = dum1.next;//second else will give error in case of only 2's
+
+    p2.next = null;
+
+    return dum0.next;
+}
