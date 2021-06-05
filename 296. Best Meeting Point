@@ -1,0 +1,39 @@
+URL: https://leetcode.com/problems/best-meeting-point/
+
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/arrays-and-strings/best-meeting-point/ojquestion
+
+
+public static int minTotalDistance(int[][] grid) {
+
+
+  //get x coordinates in sorted order
+  ArrayList<Integer> xcord = new ArrayList<>();
+  for(int r=0; r < grid.length; r++) 
+      for(int c = 0; c < grid[0].length; c++) 
+          if(grid[r][c] == 1)
+              xcord.add(r);
+
+  //get y coordinates in sorted order
+  ArrayList<Integer> ycord = new ArrayList<>();
+  for(int c=0; c < grid[0].length; c++)
+      for(int r = 0; r < grid.length; r++)
+          if(grid[r][c] == 1)
+              ycord.add(c);
+
+  //find median x and y
+
+  int x = xcord.get(xcord.size() / 2);
+  int y = ycord.get(ycord.size() / 2);
+
+  //return manhattan distance
+  int sum = 0;
+  for(int i: xcord) {
+      sum += Math.abs(x - i);
+  }
+  for(int i: ycord) {
+      sum += Math.abs(y - i);
+  }
+
+  return sum;
+
+}
