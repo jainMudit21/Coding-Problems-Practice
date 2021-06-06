@@ -1,0 +1,46 @@
+URL: https://leetcode.com/problems/find-k-closest-elements/
+
+
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        List<Integer> list  = new ArrayList<>();
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a,b) -> {
+            return (a.gap == b.gap) ? a.val - b.val : b.gap - a.gap;
+            
+        });
+        
+        for(int i=0; i < arr.length; i++) {
+            
+            if(pq.size() < k) {
+                Pair p = new Pair(arr[i], Math.abs(arr[i] - x));
+                pq.add(p);
+            }else {
+                if(pq.peek().gap > Math.abs(arr[i] - x)) {
+                    pq.remove();
+                    pq.add(new Pair(arr[i], Math.abs(arr[i] - x)));
+                }
+            }
+            
+        }
+        
+        while(pq.size() > 0) {
+            list.add(pq.remove().val);
+        }
+        
+        Collections.sort(list);
+        
+        return list;
+    }
+    
+    static class Pair {
+        int val;
+        int gap;
+        
+        Pair() {}
+        
+        Pair(int val, int gap) {
+            this.val = val;
+            this.gap = gap;
+        }
+    }
+}
