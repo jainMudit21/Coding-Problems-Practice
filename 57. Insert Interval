@@ -1,0 +1,97 @@
+URL: https://leetcode.com/problems/insert-interval/
+
+class Solution {
+    public int[][] insert(int[][] intervalList, int[] newInterval) {
+      
+      ArrayList<int[]> ans = new ArrayList<>();
+      if(intervalList.length == 0 && newInterval.length == 0) {
+          return ans.toArray(new int[ans.size()][]);
+      }
+        
+      int idx = 0;
+      
+      while(idx < intervalList.length) {
+          if(intervalList[idx][0] < newInterval[0]) {
+              ans.add(intervalList[idx]);
+              idx++;
+          }else 
+            break;
+      }
+      
+      if(ans.size() == 0 || (ans.get(ans.size() - 1)[1] < newInterval[0]) ) {
+          ans.add(newInterval);
+      }else {
+          int lastInterval[] = ans.get(ans.size() - 1);
+          lastInterval[1] = Math.max(lastInterval[1], newInterval[1]);
+      }
+      
+      
+      while(idx < intervalList.length) {
+          int lastInterval[] = ans.get(ans.size() - 1);
+          if(lastInterval[1] >= intervalList[idx][0]) {
+              lastInterval[1] = Math.max(lastInterval[1], intervalList[idx][1]);
+          }else {
+              ans.add(intervalList[idx]);
+          }
+          idx++;
+      }
+      
+      return ans.toArray(new int[ans.size()][]);
+  
+        
+    }
+}
+
+
+
+
+//interview BIt
+URL: https://www.interviewbit.com/problems/merge-intervals/
+
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+public class Solution {
+    public ArrayList<Interval> insert(ArrayList<Interval> intervalList, Interval newInterval) {
+        
+      ArrayList<Interval> ans = new ArrayList<>();
+        
+      int idx = 0;
+      
+      while(idx < intervalList.size()) {
+          if(intervalList.get(idx).start < newInterval.start) {
+              ans.add(intervalList.get(idx));
+              idx++;
+          }else 
+            break;
+      }
+      
+      if(ans.size() == 0 || (ans.get(ans.size() - 1).end < newInterval.start) ) {
+          ans.add(newInterval);
+      }else {
+          Interval lastInterval = ans.get(ans.size() - 1);
+          lastInterval.end = Math.max(lastInterval.end, newInterval.end);
+      }
+      
+      
+      while(idx < intervalList.size()) {
+          Interval lastInterval = ans.get(ans.size() - 1);
+          if(lastInterval.end >= intervalList.get(idx).start) {
+              lastInterval.end = Math.max(lastInterval.end, intervalList.get(idx).end);
+          }else {
+              ans.add(intervalList.get(idx));
+          }
+          idx++;
+      }
+      
+      return ans;
+        
+        
+    }
+}
