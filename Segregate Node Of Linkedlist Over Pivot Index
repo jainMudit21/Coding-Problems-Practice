@@ -1,0 +1,51 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/segregate-node-of-linkedlist-over-pivot-index/ojquestion
+
+public static ListNode segregate(ListNode head, int pivotIdx) {
+      
+      if(head == null || head.next == null) {
+          return head;
+      }
+      
+      ListNode curr = head;
+      int data = 0;
+      int idx = 0;
+      
+      while(curr != null) {
+          if(idx == pivotIdx) {
+              data = curr.val;
+              break;
+          }
+          curr = curr.next;
+          idx++;
+      }
+      
+      ListNode smaller = new ListNode(-1);
+      ListNode larger = new ListNode(-1);
+      ListNode sp = smaller;
+      ListNode lp = larger;
+      
+      curr = head;
+      ListNode pivot = null;
+      idx = 0;
+      
+      while(curr != null) {
+          if(idx == pivotIdx) {
+              pivot = curr;
+          }else if(curr.val <= data) {
+              sp.next = curr;
+              sp = sp.next;
+          }else {
+              lp.next = curr;
+              lp = lp.next;
+          }
+          
+          curr = curr.next;
+          idx++;
+      }
+      
+      sp.next = pivot;
+      pivot.next = larger.next;
+      lp.next = null;
+      
+      return smaller.next;
+}
