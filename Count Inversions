@@ -1,0 +1,64 @@
+URL: https://practice.geeksforgeeks.org/problems/inversion-of-array-1587115620/1#
+
+//Geeks for Geeks and Hackerrank
+
+class Solution
+{
+    // arr[]: Input Array
+    // N : Size of the Array arr[]
+    //Function to count inversions in the array.
+    static long inversionCount(long arr[], long N)
+    {
+        if(N == 1) {
+            return 0;
+        }
+        
+        mergeSort(arr, 0, arr.length-1);
+        long c = count;
+        count = 0;
+        return c;
+    }
+    
+    static long count = 0;
+    
+    static long[] mergeSort(long arr[], int lo, int hi) {
+        if(lo == hi) {
+            return new long[]{arr[lo]};
+        }
+        
+        int mid = lo + (hi - lo)/2;
+        
+        long[] left = mergeSort(arr, lo, mid);
+        long[] right = mergeSort(arr, mid + 1, hi);
+        
+        return merge(left, right);
+    }
+    
+    static long[] merge(long[] left, long[] right) {
+        
+        int i=0,j=0,k=0;
+        
+        long[] merged = new long[left.length + right.length];
+        
+        while(i < left.length && j < right.length) {
+            
+            if(left[i] <= right[j]) {
+                merged[k++] = left[i++];
+            }else {
+                count += (left.length - i);
+                merged[k++] = right[j++];
+            }
+        }
+        
+        while(i< left.length) {
+            merged[k++] = left[i++];
+        }
+        
+        
+        while(j< right.length) {
+            merged[k++] = right[j++];
+        }
+        
+        return merged;
+    }
+}
