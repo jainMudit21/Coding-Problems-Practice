@@ -24,3 +24,37 @@ public int meetingRooms(int intervals[][]) {
       return pq.size();
       
 }
+
+
+
+//new solution
+public int meetingRooms(int intervals[][]) {
+      
+      int[] st = new int[intervals.length], ed = new int[intervals.length];
+      
+      for(int i=0; i < intervals.length; i++) {
+          
+          st[i] = intervals[i][0];
+          ed[i] = intervals[i][1];
+          
+      }
+      
+      Arrays.sort(st);
+      Arrays.sort(ed);
+      
+      int i = 0, j = 0;
+      int count = 0;
+      
+      while(i < st.length && j < ed.length) {
+          if(st[i] < ed[j]) {
+              i++;
+              count++;
+          }else {
+              i++;
+              j++;
+          }
+      }
+      
+      return count;
+      
+}
