@@ -1,0 +1,26 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/arrays-and-strings/wiggle-sort-1/ojquestion
+
+public static void wiggleSort(int[] arr) {
+      
+      for(int i=0; i < arr.length - 1; i++){
+          
+          if(i % 2 == 0) {
+              //even index
+              if(arr[i] > arr[i+1]) {
+                  swap(arr, i, i+1);
+              }
+          }else {
+              //odd index
+              if(arr[i] < arr[i + 1]) {
+                  swap(arr, i, i+1);
+              }
+          }
+          
+      }
+  }
+  
+  public static void swap(int[] arr, int i, int j) {
+      int tmp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = tmp;
+  }
