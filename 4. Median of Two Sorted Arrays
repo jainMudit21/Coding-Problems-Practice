@@ -1,0 +1,60 @@
+URL: https://leetcode.com/problems/median-of-two-sorted-arrays/
+
+URL: https://www.interviewbit.com/problems/median-of-array/
+
+class Solution {
+    public double findMedianSortedArrays(int[] a, int[] b) {
+        
+        if(a.length == 0 && b.length == 0) {
+            return 0;
+        }
+        
+        if(a.length > b.length) {
+            int[] temp = a;
+            a = b;
+            b = temp;
+        }
+        
+        int lo = 0;
+        int hi = a.length;
+        int te = a.length + b.length;
+        
+        while(lo <= hi) {
+            
+            int aleft = lo + (hi - lo)/2;
+            int bleft = (te + 1)/2 - aleft;
+            
+            int alm1= (aleft==0)?Integer.MIN_VALUE : a[aleft-1];
+            int al= (aleft==a.length)?Integer.MAX_VALUE : a[aleft];
+            int bl= (bleft==b.length)?Integer.MAX_VALUE : b[bleft];
+            int blm1= (bleft==0)?Integer.MIN_VALUE : b[bleft-1];
+            
+            //check valid segregation
+            if(alm1 <= bl && blm1 <= al) {
+                if(te % 2 == 0) {
+                    int lmax = Math.max(alm1, blm1);
+                    int rmin = Math.min(al, bl);
+                    
+                    return (lmax + rmin)/2.0;
+                }else {
+                    double median = 0.0;
+                    median = Math.max(alm1, blm1);
+                    return median;
+                }
+                
+            }else if(alm1 > bl) {
+                //there are more elements to be picked in left part from b array, therefore move left
+                hi = aleft - 1;
+                
+            }else {
+                //there are more elements to be picked in left part from a array, therefore move right
+                lo = aleft + 1;
+                
+            }
+            
+        }
+        
+        return 0.0;
+        
+    }
+}
