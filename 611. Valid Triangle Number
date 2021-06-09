@@ -1,0 +1,33 @@
+URL: https://leetcode.com/problems/valid-triangle-number/
+
+URL: https://www.interviewbit.com/problems/counting-triangles/
+
+URL: https://practice.geeksforgeeks.org/problems/count-possible-triangles-1587115620/1#
+
+class Solution {
+    public int triangleNumber(int[] arr) {
+        Arrays.sort(arr);
+        int count = 0;
+
+        for(int i=arr.length-1; i>=2; i--) {
+
+          int lo = 0;
+          int hi = i-1;
+
+          while(lo < hi) {
+              if(arr[lo] + arr[hi] > arr[i]) {
+
+                  count += hi - lo;
+                  hi--;
+
+              }else if(arr[lo] + arr[hi] <= arr[i]) {
+                  lo++;
+
+
+              }
+          }
+
+        }
+        return count;
+    }
+}
