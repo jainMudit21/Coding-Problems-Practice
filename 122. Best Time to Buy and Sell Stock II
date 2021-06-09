@@ -43,3 +43,28 @@ class Solution {
 //2. if the profit is less than previous profit then again book the profit and then update the start.
 
 //basically every time you feel the need to update the start book the profit first.
+
+
+
+
+//Greedy Approach
+class Solution {
+    public int maxProfit(int[] prices) {
+        
+        int buy = 0;
+        int sell = 0;
+        int profit = 0;
+        
+        for(int i = 1; i < prices.length; i++) {
+            if(prices[i] > prices[i-1]) {
+                sell++;//will sell later
+            }else {
+                profit += prices[sell] - prices[buy];//sell now and buy today because its a dip
+                buy = sell = i;
+            }
+        }
+        
+        profit += prices[sell] - prices[buy];
+        return profit;
+    }
+}
