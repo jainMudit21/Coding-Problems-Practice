@@ -1,0 +1,32 @@
+URL: https://leetcode.com/problems/find-the-most-competitive-subsequence/
+
+class Solution {
+    public int[] mostCompetitive(int[] nums, int k) {
+        
+        Stack<Integer> st = new Stack<>();
+        int n = nums.length;
+
+        for(int i = 0; i < n; i++) {
+
+          int val = nums[i];
+
+          //remaining >= requirement (valid) && smaller than peek (optimal)
+          while(n-i-1 >= k-st.size() && st.size() > 0 && st.peek() > nums[i]) {
+              st.pop();
+          }
+
+          if(st.size() < k) {
+              st.push(val);
+          }
+
+        }
+
+        int[] ans = new int[st.size()];
+        for(int i=ans.length -1; i >= 0; i--) {
+          ans[i] = st.pop();
+        }
+
+        return ans;
+        
+    }
+}
