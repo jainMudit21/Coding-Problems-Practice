@@ -1,0 +1,43 @@
+URL: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/
+
+
+class Solution {
+    public int maxProfit(int[] arr) {
+        int n = arr.length;
+        int dp1[] = new int[n];
+        
+        int lsf = arr[0]; //least so far
+        int mpist = 0; //max profit if sold today
+        
+        for(int i=1; i < n; i++) {
+            if(arr[i] < lsf) {
+                lsf = arr[i];
+            }
+            
+            mpist = arr[i] - lsf;
+            dp1[i] = Math.max(dp1[i-1], mpist);
+        }
+        
+        int mpibt = 0;//max profit if bought today
+        int maxat = arr[n-1]; //max after today
+        int dp2[] = new int[n];
+        for(int i = n-2; i>=0; i--) {
+            if(arr[i] > maxat) {
+                maxat = arr[i];
+            }
+            
+            mpibt = maxat - arr[i];
+            dp2[i] = Math.max(dp2[i+1], mpibt);
+        }
+        
+        int op = 0;
+        for(int i=1; i < n; i++) {
+            if(dp1[i] + dp2[i] > op) {
+                op = dp1[i] + dp2[i];
+            }
+        }
+        
+        return op;
+        
+    }
+}
