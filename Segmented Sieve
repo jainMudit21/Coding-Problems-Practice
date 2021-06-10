@@ -1,0 +1,73 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/arrays-and-strings/segmented-sieve/ojquestion
+
+import java.util.*;
+
+public class Main {
+
+  // ~~~~~~~~~~~~~User Section~~~~~~~~~~~~
+  
+  
+  public static ArrayList<Integer> getPrimes(int n) {
+      boolean[] arr = new boolean[n+ 1];
+      
+      for(int i = 2; i * i <= arr.length; i++) {
+          if(arr[i] == false) {
+              for(int j = 2*i; j < arr.length; j+=i) {
+                  arr[j] = true;
+              }
+          }
+      }
+      
+      ArrayList<Integer> res = new ArrayList<>();
+      for(int i = 2; i < arr.length; i++) {
+          if(arr[i] == false) {
+              res.add(i);
+          }
+      }
+      
+      return res;
+  }
+
+  public static void segmentedSieveAlgo(int a, int b) {
+      //1. Find sqrt of b
+      int root = (int)Math.sqrt(b);
+      //2. Find all the primes till b
+      ArrayList<Integer> primes = getPrimes(root);
+      //3. define all numbers from a to b as primes
+      boolean[] arr = new boolean[b - a + 1]; //false -> prime
+      
+      //4. For every prime number, find its multiple in a->b
+      //and mark it as true i.e. not prime
+      for(int prime: primes) {
+          
+          int multiple = (int) Math.ceil(a*1.0/prime);
+          if(multiple == 1)
+            multiple++;
+        
+          int si = multiple * prime - a;
+          
+          for(int i = si; i < arr.length; i+=prime) {
+              arr[i] = true;
+          }
+          
+      }
+      
+      //5. All false values in array are primes
+      
+      for(int i = 0; i < arr.length; i++) {
+        
+        if(arr[i] == false && i+a != 1)//because 1 is neither prime nor composite
+            System.out.println(i+a);
+          
+      }
+      
+  }
+
+  // ~~~~~~~~~~~~Input Management~~~~~~~~~~~
+  public static void main(String[] args) {
+    Scanner scn = new Scanner(System.in);
+    int a = scn.nextInt();
+    int b = scn.nextInt();
+    segmentedSieveAlgo(a, b);
+  }
+}
