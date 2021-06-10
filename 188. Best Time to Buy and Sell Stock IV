@@ -1,0 +1,66 @@
+URL: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/
+
+
+//O(n^3) solution
+class Solution {
+    public int maxProfit(int k, int[] arr) {
+        int n = arr.length;
+        if(n == 0 || k == 0) {
+            return 0;
+        }
+        
+        int dp[][] = new int[k+1][n];
+        
+        for(int t=1; t <= k; t++) {
+            
+            for(int d = 1; d < arr.length; d++) {
+                
+                int max = dp[t][d-1];
+                
+                for(int pd = 0; pd < d; pd++) {
+                    int profitTillTMinusOne = dp[t-1][pd];
+                    int profitOnTthDay = arr[d] - arr[pd];
+                    
+                    max = Math.max(max, profitTillTMinusOne + profitOnTthDay);
+                }
+                
+                dp[t][d] = max;
+            }
+            
+        }
+        
+        return dp[k][n-1];
+        
+    }
+}
+
+
+//O(n^2) Solution
+
+class Solution {
+    public int maxProfit(int k, int[] arr) {
+        int n = arr.length;
+        if(n == 0 || k == 0) {
+            return 0;
+        }
+        
+        int dp[][] = new int[k+1][n];
+        
+        for(int t=1; t <= k; t++) {
+            int max = Integer.MIN_VALUE;
+            for(int d = 1; d < arr.length; d++) {
+                
+                if(dp[t-1][d-1] - arr[d-1] > max) {
+                    max = dp[t-1][d-1] - arr[d-1];
+                }
+                
+                dp[t][d] = Math.max(dp[t][d-1], max + arr[d]);
+                
+            }
+            
+        }
+        
+        return dp[k][n-1];
+        
+    }
+}
