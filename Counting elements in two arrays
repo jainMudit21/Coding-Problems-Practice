@@ -1,0 +1,37 @@
+URL: https://practice.geeksforgeeks.org/problems/counting-elements-in-two-arrays/1#
+
+//Time Complexity: O(Max(arr1.length, arr2.length, max in arr1))
+
+class Solution
+{
+    public static ArrayList<Integer> countEleLessThanOrEqual(int arr1[], int arr2[], int m, int n)
+    {
+        
+        int max= arr1[0];
+      
+      for(int x: arr1) {
+          max = Math.max(x, max);
+      }
+      
+      int[] fmap = new int[max + 1];
+      int[] psa = new int[max + 1];
+      
+      for(int i = 0; i < arr2.length; i++) {
+          if(arr2[i] >= fmap.length) {
+              continue;
+          }
+          
+          fmap[arr2[i]]++;
+      }
+      psa[0] = fmap[0];
+      for(int i=1; i < psa.length; i++) {
+          psa[i] = psa[i-1] + fmap[i];
+      }
+      ArrayList<Integer> list = new ArrayList<>();
+      for(int i=0; i < arr1.length; i++) {
+          list.add(psa[arr1[i]]);
+      }
+      
+      return list;
+    }
+}
