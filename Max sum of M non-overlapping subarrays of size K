@@ -1,0 +1,59 @@
+URL: https://www.geeksforgeeks.org/max-sum-of-m-non-overlapping-subarrays-of-size-k/
+
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/dynamic-programming/maximum-sum-of-m-non-overlapping-subarrays-official/ojquestion
+
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+	public static int solution(int[] arr, int m, int k, int[] psum, int idx, int[][] dp){
+	    
+	    if(m == 0) {
+	        return 0;
+	    }
+	    
+	    if(idx >= arr.length) {
+	        return 0;
+	    }
+	    
+	    if(dp[idx][m] != 0) {
+	        return dp[idx][m];
+	    }
+	    
+	    int exclude = 0 + solution(arr, m, k, psum, idx + 1, dp);
+	    int include = psum[idx] + solution(arr, m-1, k, psum, idx + k, dp);
+	    
+	    int ans = Math.max(exclude, include);
+	    dp[idx][m] = ans;
+		
+		return ans;
+	}
+	
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		int n = scn.nextInt();
+		int[] arr = new int[n];
+		for(int i = 0 ; i < arr.length; i++){
+			arr[i] = scn.nextInt();
+		}
+        int m = scn.nextInt();
+        int k = scn.nextInt();
+        
+        int psum[] = new int[n];
+        int sum = 0;
+        for(int i=0; i < k; i++) {
+            sum += arr[i];
+        }
+        psum[0] = sum;
+        for(int i=k, j = 0; i < n; i++, j++) {
+            sum = sum + arr[i] - arr[j];
+            psum[i-k+1] = sum;
+        }
+        
+        
+        System.out.println(solution(arr, m , k, psum, 0, new int[arr.length][m+1]));
+	}
+
+}
