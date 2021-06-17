@@ -1,0 +1,111 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/trees/diagonal-order-sum-of-a-binary-tree/ojquestion
+
+URL: https://practice.geeksforgeeks.org/problems/diagonal-sum-in-binary-tree/1#
+
+//BFS
+
+public static ArrayList<Integer> diagonalOrderSum(TreeNode root) {
+  
+    LinkedList<TreeNode> q = new LinkedList<>();
+    ArrayList<Integer> list = new ArrayList<>();
+
+    q.addLast(root);
+
+    while(!q.isEmpty()) {
+        int size = q.size();
+        int sum = 0;
+        while(size-- > 0) {
+
+            TreeNode rp = q.removeFirst();
+
+            while(rp!= null) {
+                sum += rp.val;
+                if(rp.left != null)
+                    q.addLast(rp.left);
+                rp= rp.right;
+            }
+        }
+        list.add(sum);
+    }
+
+    return list;
+}
+  
+  
+  
+//DFS
+public static ArrayList<Integer> diagonalOrderSum(TreeNode root) {
+  
+    ArrayList<Integer> list = new ArrayList<>();       
+    dfs(root, list, 0);
+    return list;
+}
+
+private static void dfs(TreeNode root, ArrayList<Integer> list, int index) {
+        
+    if(root != null) {
+        if(list.size() == index) {
+            list.add(root.val);
+        }else {
+            list.set(index, list.get(index) + root.val);
+        }
+
+        dfs(root.left, list, index + 1);
+        dfs(root.right, list, index);
+    }       
+}
+
+
+
+//Shadow Technique
+public static ArrayList<Integer> diagonalOrderSum(TreeNode root) {
+
+    ArrayList<Integer> list = new ArrayList<>();
+    if(root == null) {
+        return list;   
+    }
+    Node node = new Node(0);
+
+    dfs(root, node);
+
+    while(node != null) {
+        list.add(node.data);
+        node = node.prev;
+    }
+
+
+    return list;
+}
+
+private static void dfs(TreeNode root, Node node) {
+        
+    if(root == null) {
+        return;
+    }
+
+    node.data += root.val;
+
+    if(root.left != null) {
+        if(node.prev == null) {
+            Node nnode = new Node(0);
+            node.prev = nnode;
+            nnode.next = node;
+        }
+        dfs(root.left, node.prev);
+    }
+
+    if(root.right != null) {
+        dfs(root.right, node);
+    }
+}
+    
+private static class Node {
+    int data;
+    Node prev;
+    Node next;
+
+    Node(int data){
+        this.data = data;
+        this.prev = this.next = null;
+    }
+}
