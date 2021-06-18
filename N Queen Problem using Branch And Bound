@@ -1,0 +1,71 @@
+URL: https://www.geeksforgeeks.org/n-queen-problem-using-branch-and-bound/
+
+https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/nqueens-branch-and-bound-official/ojquestion
+
+/* Approach: In branch and bound method we change the working of isSafe Method. 
+Basically, we try to place a queen in every column, if it is safe to place in that column, then we place it and call for next row.
+
+Safety of placing a queen is determined by
+1. No queen should be present in that same row or column.
+2. No queen should be present in both diagonals as the queen's.
+
+If the above two factors are true then we place the queen and move ahead.
+
+Checking safety can be done by calling For Loops for that column, diagonal and reverse diagonal respectively.
+But in this method we will check by creating storage spaces.
+1. Create an array of number of columns.
+2. Create an array of 2*n - 1 for normal diagonals.
+3. Create an array of 2*n - 1 for reverse diagonals.
+
+Before placing the queen, check if any queen is present at that indexes in all 3 arrays.
+If not, place the queen and call for next
+If yes, try next column.
+If all places have been exhausted and no answer has been found, then backtrack and 
+change places for previous queen.
+
+*/
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        boolean[][] board = new boolean[n][n];
+        //write your code here
+        
+        boolean cols[] = new boolean[n];
+        boolean ndiag[] = new boolean[2 * n - 1];
+        boolean rdiag[] = new boolean[2 * n - 1];
+        
+        solve(board, 0, cols, ndiag, rdiag, "");
+    }
+    
+    public static void solve(boolean board[][], int row, boolean cols[], boolean ndiag[], boolean rdiag[], String ans) {
+        if(row == board.length) {
+            System.out.println(ans + ".");
+            return;
+        }
+        
+        
+        for(int col=0; col < board.length; col++) {
+            
+            if(!cols[col] && !ndiag[row + col] && !rdiag[row - col + board.length - 1]) {
+                board[row][col] = true;
+                cols[col] = true;
+                ndiag[row + col] = true;
+                rdiag[row - col + board.length - 1] = true;
+                
+                solve(board, row + 1, cols, ndiag, rdiag, ans + row + "-" + col + ", ");
+                
+                board[row][col] = false;
+                cols[col] = false;
+                ndiag[row + col] = false;
+                rdiag[row - col + board.length - 1] = false;
+            }
+        }
+    }
+
+}
