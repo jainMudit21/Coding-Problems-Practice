@@ -51,6 +51,23 @@ public class Main {
 SOLUTION 2: USING BACKTRACKING
 URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/abbreviation-suing-backtracking-official/ojquestion#
 
+/* Approach: Understand the expected output
+Input: pep
+Output: pep, pe1, p2, p1p, 1ep, 2p, 3, 1e1
+
+See the relation between input and output. Length of input string = 3, Number of abbr. = 2^3 = 8.
+Isn't it like subsequence relation. Every character deciding whether it wants to take part or not.
+
+We call function for both choices of a character and whenever we reach end of string( i.e. no more character to process) we print the answer string.
+
+There is 1 slight modification though, whenever the character makes a NO call, it puts a number in its place. Therefore, the number of consecutive
+characters taking a NO call will increase count accordingly like in (p2, 3, 2p).
+
+So what, lets take a count variable which will get incremented during NO call.
+
+That means, whenever we want to make a YES call, we can check if count != 0, lets append the count to answer string and make it 0 for next call.
+
+*/
 
 import java.io.*;
 import java.util.*;
