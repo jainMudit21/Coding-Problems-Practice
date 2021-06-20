@@ -1,0 +1,24 @@
+URL: https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
+
+class Solution {
+    public int findMinArrowShots(int[][] coordi) {
+        Arrays.sort(coordi, (a, b) -> Integer.compare(a[1], b[1]));
+        //Always use Integer.compare instead of a[1] - b[1]
+        //can lead to overflow errors and what not.
+
+        int arrow = 1;
+        int end = coordi[0][1];
+        for(int i=1; i < coordi.length; i++) {
+
+          if(coordi[i][0] <= end) {
+              //same arrow will kill
+          }else {
+              arrow++;
+              end = coordi[i][1];
+          }
+
+        }
+
+        return arrow;
+    }
+}
