@@ -1,0 +1,193 @@
+//Backtracking Solution- for understanding approach (will give TLE)
+
+class Solution {
+    
+    int maxcc = 0;
+    
+    public int cherryPickup(int[][] grid) {
+        topToBottom(0, 0, grid, 0);
+        return maxcc;
+    }
+    
+    public void topToBottom(int row, int col, int arr[][], int ccsf) {
+        
+        if(row < 0 || col < 0 || row >= arr.length || col >= arr[0].length || arr[row][col] == -1) {
+            return;
+        }
+        
+        if(row == arr.length - 1 && col == arr[0].length - 1) {
+            bottomToTop(row, col, arr, ccsf);
+            return;
+        }
+        
+        int cherries = arr[row][col];
+        arr[row][col] = 0;
+        topToBottom(row, col + 1, arr, ccsf + cherries);
+        topToBottom(row + 1, col, arr, ccsf + cherries);
+        arr[row][col] = cherries;
+        
+    }
+    
+    public void bottomToTop(int row, int col, int arr[][], int ccsf) {
+        if(row < 0 || col < 0 || row >= arr.length || col >= arr[0].length || arr[row][col] == -1) {
+            return;
+        }
+        
+        if(row == 0 && col == 0) {
+            maxcc = Math.max(maxcc, ccsf);
+            return;
+        }
+        
+        int cherries = arr[row][col];
+        arr[row][col] = 0;
+        bottomToTop(row, col - 1, arr, ccsf + cherries);
+        bottomToTop(row - 1, col, arr, ccsf + cherries);
+        arr[row][col] = cherries;
+    }
+}
+
+
+
+//Recursive Solution
+class Solution {
+    
+    public int cherryPickup(int[][] grid) {
+        
+        return solution(0, 0, 0, 0, grid);
+        
+    }
+    
+    public int solution(int r1, int c1, int r2, int c2, int arr[][]) {
+        if(r1 >= arr.length || r2 >= arr.length || c1 >= arr[0].length || c2 >= arr[0].length || arr[r1][c1] == -1 || arr[r2][c2] == -1){
+            return Integer.MIN_VALUE;
+        }
+        
+        if(r1 == arr.length-1 && c1 == arr[0].length - 1) {
+            return arr[r1][c1];
+        }
+        
+        int cherries = 0;
+        if(r1 == r2 && c1 == c2) {
+            cherries += arr[r1][c1];
+        }else {
+            cherries += arr[r1][c1] + arr[r2][c2];
+        }
+        
+        int f1 = solution(r1, c1 + 1, r2, c2 + 1, arr); //h, h
+        int f2 = solution(r1 + 1, c1, r2, c2 + 1, arr); //v, h
+        int f3 = solution(r1 + 1, c1, r2 + 1, c2, arr); //v, v
+        int f4 = solution(r1, c1 + 1, r2 + 1, c2, arr); //h, v
+        
+        cherries += Math.max(Math.max(f1, f2), Math.max(f3, f4));
+        
+        return cherries;
+    }
+    
+    
+}
+
+
+
+
+//Memoized DP Solution
+class Solution {
+    
+    public int cherryPickup(int[][] grid) {
+        int n = grid.length;
+        if(n == 0) {
+            return 0;
+        }
+        
+        int dp[][][][] = new int[n][n][n][n];
+        
+        int ans = solution(0, 0, 0, 0, grid, dp);
+        return ans <= 0 ? 0: ans;
+        
+    }
+    
+    public int solution(int r1, int c1, int r2, int c2, int arr[][], int dp[][][][]) {
+        if(r1 >= arr.length || r2 >= arr.length || c1 >= arr[0].length || c2 >= arr[0].length || arr[r1][c1] == -1 || arr[r2][c2] == -1){
+            return Integer.MIN_VALUE;
+        }
+        
+        if(r1 == arr.length-1 && c1 == arr[0].length - 1) {
+            return arr[r1][c1];
+        }
+        
+        if(dp[r1][c1][r2][c2] != 0) {
+            return dp[r1][c1][r2][c2];
+        }
+        
+        int cherries = 0;
+        if(r1 == r2 && c1 == c2) {
+            cherries += arr[r1][c1];
+        }else {
+            cherries += arr[r1][c1] + arr[r2][c2];
+        }
+        
+        int f1 = solution(r1, c1 + 1, r2, c2 + 1, arr, dp); //h, h
+        int f2 = solution(r1 + 1, c1, r2, c2 + 1, arr, dp); //v, h
+        int f3 = solution(r1 + 1, c1, r2 + 1, c2, arr, dp); //v, v
+        int f4 = solution(r1, c1 + 1, r2 + 1, c2, arr, dp); //h, v
+        
+        cherries += Math.max(Math.max(f1, f2), Math.max(f3, f4));
+        
+        dp[r1][c1][r2][c2] = cherries;
+        
+        return cherries;
+    }   
+}
+
+
+
+
+
+//More Space Optimized
+class Solution {
+    
+    public int cherryPickup(int[][] grid) {
+        int n = grid.length;
+        if(n == 0) {
+            return 0;
+        }
+        
+        int dp[][][] = new int[n][n][n];
+        
+        int ans = solution(0, 0, 0, grid, dp);
+        return ans <= 0 ? 0: ans;
+        
+    }
+    
+    public int solution(int r1, int c1, int r2, int arr[][], int dp[][][]) {
+        int c2 = r1-r2+c1;
+        if(r1 >= arr.length || r2 >= arr.length || c1 >= arr[0].length || c2 >= arr[0].length || arr[r1][c1] == -1 || arr[r2][c2] == -1){
+            return Integer.MIN_VALUE;
+        }
+        
+        if(r1 == arr.length-1 && c1 == arr[0].length - 1) {
+            return arr[r1][c1];
+        }
+        
+        if(dp[r1][c1][r2] != 0) {
+            return dp[r1][c1][r2];
+        }
+        
+        int cherries = 0;
+        if(r1 == r2 && c1 == c2) {
+            cherries += arr[r1][c1];
+        }else {
+            cherries += arr[r1][c1] + arr[r2][c2];
+        }
+        
+        int f1 = solution(r1, c1 + 1, r2, arr, dp); //h, h
+        int f2 = solution(r1 + 1, c1, r2, arr, dp); //v, h
+        int f3 = solution(r1 + 1, c1, r2 + 1, arr, dp); //v, v
+        int f4 = solution(r1, c1 + 1, r2 + 1, arr, dp); //h, v
+        
+        cherries += Math.max(Math.max(f1, f2), Math.max(f3, f4));
+        
+        dp[r1][c1][r2] = cherries;
+        
+        return cherries;
+    }   
+}
