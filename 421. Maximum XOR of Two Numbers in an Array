@@ -1,0 +1,90 @@
+URL: https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/
+
+class Solution {
+    public int findMaximumXOR(int[] nums) {
+        Trie trie = new Trie();
+
+        for(int val: nums) {
+          trie.insert(val);
+        }
+
+        int max = 0;
+        for(int x: nums) {
+          int find = x ^ Integer.MAX_VALUE;
+          int res = trie.search(find);
+
+          max = Math.max(max, res ^ x);
+        }
+
+        return max;
+    }
+    
+    class Trie {
+      
+      class Node {
+          Node left, right;
+      }
+      
+      Node root;
+      
+      Trie() {
+          root = new Node();
+      }
+      
+      void insert(int val) {
+          int bitIndex = 30;
+          Node curr = root;
+          
+          while(bitIndex >= 0) {
+              int mask = 1 << bitIndex;
+              int bit = (val & mask) > 0 ? 1 : 0;
+              
+              if(bit == 0) {
+                  if(curr.left == null) {
+                      curr.left = new Node();
+                  }
+                  curr = curr.left;
+              }else {
+                  if(curr.right == null)
+                    curr.right = new Node();
+                  
+                  curr = curr.right;
+              }
+              
+              bitIndex--;
+          }
+      }
+      
+      int search(int find) {
+          int bitIndex = 30;
+          Node curr = root;
+          
+          int ans = 0;
+          while(bitIndex >= 0) {
+              int mask = 1 << bitIndex;
+              int bit = (find & mask) > 0 ? 1 : 0;
+              
+              if(bit == 0) {
+                  if(curr.left != null) {
+                      curr = curr.left;
+                  }else {
+                      ans |= mask;
+                      curr = curr.right;
+                  }
+              }else {
+                  if(curr.right != null) {
+                      ans |= mask;
+                      curr = curr.right;
+                  }else {
+                      curr = curr.left;
+                  }
+              }
+              
+              
+              bitIndex--;
+          }
+          
+          return ans;
+      }
+  }
+}
