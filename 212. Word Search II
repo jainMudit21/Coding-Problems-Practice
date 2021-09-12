@@ -1,0 +1,71 @@
+URL: https://leetcode.com/problems/word-search-ii/
+
+class Solution {
+  public List<String> findWords(char[][] board, String[] words) {
+      Node root = new Node();
+      for(String s: words) {
+          insert(root, s);
+      }
+      
+      List<String> ans = new ArrayList<>();
+      boolean vis[][] = new boolean[board.length][board[0].length];
+      for(int i=0; i < board.length; i++) {
+          for(int j=0; j < board[0].length; j++) {
+              
+              dfs(board, i, j, root, ans, vis);
+              
+          }
+      }
+      
+      return ans;
+    }
+    
+  void dfs(char[][] board, int i, int j, Node root, List<String> ans, boolean vis[][]) {
+      
+      if(i < 0 || j < 0 || i >= board.length || j >= board[0].length || vis[i][j] || root.count == 0) {
+          return;
+      }
+      
+      if(root.childs[board[i][j] - 'a'] == null) {
+          return;
+      }
+      
+      Node child = root.childs[board[i][j] - 'a'];
+      if(child.str != null) {
+          ans.add(child.str);
+          child.str = null;
+      }
+      
+      
+      vis[i][j] = true;
+      dfs(board, i + 1, j, child, ans, vis);
+      dfs(board, i - 1, j, child, ans, vis);
+      dfs(board, i, j + 1, child, ans, vis);
+      dfs(board, i, j - 1, child, ans, vis);
+      vis[i][j] = false;
+      
+      if(child.count == 0) {
+          root.count--;
+      }
+  }
+    
+  class Node {
+      Node[] childs = new Node[26];
+      String str;
+      int count = 0;
+  }
+  
+  public void insert(Node root, String s) {
+      Node curr = root;
+      
+      for(int i=0; i < s.length(); i++) {
+          char ch = s.charAt(i);
+          if(curr.childs[ch - 'a'] == null) {
+              curr.childs[ch - 'a'] = new Node();
+              curr.count++;
+          }
+          curr = curr.childs[ch - 'a'];
+      }
+      curr.str = s;
+  }
+}
