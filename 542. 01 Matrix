@@ -1,0 +1,46 @@
+URL: https://leetcode.com/problems/01-matrix/
+
+class Solution {
+    public int[][] updateMatrix(int[][] matrix) {
+        Queue<Pair> q = new LinkedList<>();
+
+        for(int i=0; i < matrix.length; i++) {
+          for(int j=0; j < matrix[0].length; j++) {
+              if(matrix[i][j] == 0) {
+                  q.add(new Pair(i, j));
+              }else {
+                  matrix[i][j] = -1;
+              }
+          }
+        }
+
+        while(q.isEmpty() == false) {
+          Pair rp = q.remove();
+
+          for(int i=0; i < dirs.length; i++) {
+              int rowdash = rp.x + dirs[i][0];
+              int coldash = rp.y + dirs[i][1];
+
+              if(rowdash >= 0 && coldash >= 0 && rowdash < matrix.length && coldash < matrix[0].length && matrix[rowdash][coldash] < 0) {
+                  matrix[rowdash][coldash] = matrix[rp.x][rp.y] + 1;
+                  q.add(new Pair(rowdash, coldash));
+              }
+          }
+        }
+
+        return matrix;
+        
+    }
+    
+    private int[][] dirs = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+    
+    private class Pair {
+    int x;
+    int y;
+
+    Pair(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+}
