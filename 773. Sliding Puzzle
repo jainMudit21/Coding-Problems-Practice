@@ -1,0 +1,60 @@
+URL: https://leetcode.com/problems/sliding-puzzle/
+
+class Solution {
+    public int slidingPuzzle(int[][] board) {
+      String target = "123450";
+      Queue<String> q = new LinkedList<>();
+      
+      StringBuilder sb = new StringBuilder();
+      for(int i=0; i < board.length; i++) {
+          for(int j=0; j < board[0].length; j++) {
+              sb.append(board[i][j]);
+          }
+      }
+      String initial = sb.toString();
+      
+      int[][] swapidx = {{1, 3}, {0, 2, 4}, {1, 5}, {0, 4}, {1, 3, 5}, {4, 2}};
+      
+      q.add(initial);
+      int level = 0;
+      HashSet<String> vis = new HashSet<>();
+      vis.add(initial);
+      
+      while(q.size() != 0) {
+          int size = q.size();
+          
+          while(size-- > 0) {
+              String rem = q.remove();
+              if(rem.equals(target)) {
+                  return level;
+              }
+              
+              int idx = rem.indexOf('0');
+              
+              int[] swap = swapidx[idx];
+              for(int swappable: swap) {
+                  String tba = swap(rem, idx, swappable);
+                  if(vis.contains(tba)) {
+                      continue;
+                  }
+                  vis.add(tba);
+                  q.add(tba);
+              }
+              
+          }
+          level++;
+      }
+      
+      return -1;
+    }
+    
+    String swap(String str, int i, int j) {
+
+        char[] arr = str.toCharArray();
+        char tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+
+        return new String(arr);
+    }
+}
