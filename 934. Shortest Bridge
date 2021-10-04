@@ -1,0 +1,78 @@
+URL: https://leetcode.com/problems/shortest-bridge/
+
+class Solution {
+    public int shortestBridge(int[][] a) {
+        
+        boolean[][] vis = new boolean[a.length][a[0].length];
+        boolean flag = false;
+
+        Queue<Pair> q = new LinkedList<>();
+        for(int i=0; i < a.length && !flag; i++) {
+            for(int j=0; j < a[0].length && !flag; j++) {
+                if(a[i][j] == 1) {
+                    dfs(a, i, j, q, vis);
+                    flag = true;
+                }
+            }
+        }
+
+        // System.out.println(q.peek().x + " " + q.peek().y);
+
+        int level = 0;
+        while(q.size() > 0) {
+            int size = q.size();
+
+            while(size-- > 0) {
+                Pair rp = q.remove();
+
+                for(int i=0; i < 4; i++) {
+                    int rowd = rp.x + dirs[i][0];
+                    int cold = rp.y + dirs[i][1];
+
+                    if(rowd<0 || cold<0 || rowd>=a.length || cold>=a[0].length || vis[rowd][cold]) {
+                  continue;
+
+                    }
+
+                    if(a[rowd][cold] == 1) {
+                        return level;
+                    }
+
+                    q.add(new Pair(rowd, cold));
+                    vis[rowd][cold] = true;
+
+                }
+            }
+            level++;
+        }
+
+        return -1;
+    }
+    
+    void dfs(int a[][], int i, int j, Queue<Pair> q, boolean vis[][]) {
+      vis[i][j] = true;
+      q.add(new Pair(i,j));
+      for(int idx=0; idx < 4; idx++) {
+          int rowd = i + dirs[idx][0];
+          int cold = j + dirs[idx][1];
+
+          if(rowd<0 || cold<0 || rowd>=a.length || cold>=a[0].length || vis[rowd][cold] || a[rowd][cold] == 0) {
+              continue;
+          }
+
+          dfs(a, rowd, cold, q, vis);
+      }
+    }
+    
+    class Pair {
+        int x;
+        int y;
+
+        Pair(int x, int y) {
+          this.x = x;
+          this.y = y;
+        }
+    }
+    
+    int[][] dirs = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+}
