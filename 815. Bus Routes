@@ -1,0 +1,60 @@
+URL: https://leetcode.com/problems/bus-routes/
+
+class Solution {
+    public int numBusesToDestination(int[][] routes, int S, int T) {
+      int n = routes.length;
+      HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+      
+      for(int i=0; i < n; i++) {
+          for(int j = 0; j < routes[i].length; j++) {
+              int bustopno = routes[i][j];
+              ArrayList<Integer> busno = map.getOrDefault(bustopno, new ArrayList<>());
+              busno.add(i);
+              map.put(bustopno, busno);
+          }
+      }
+      
+      Queue<Integer> q = new LinkedList<>();
+      HashSet<Integer> bustopvis = new HashSet<>();
+      HashSet<Integer> busvis = new HashSet<>();
+      int level = 0;
+      
+      q.add(S);
+      bustopvis.add(S);
+      
+      while(q.size() > 0) {
+          int size = q.size();
+          
+          while(size-- > 0) {
+              int rem = q.remove();
+              
+              if(rem == T) {
+                  return level;
+              }
+              
+              ArrayList<Integer> buses = map.get(rem);
+              for(int bus: buses) {
+                  if(busvis.contains(bus)) {
+                      continue;
+                  }
+                  
+                  int[] arr = routes[bus];
+                  for(int busstop: arr) {
+                      if(bustopvis.contains(busstop)) {
+                          continue;
+                      }
+                      
+                      q.add(busstop);
+                      bustopvis.add(busstop);
+                  }
+                  
+                  busvis.add(bus);
+              }
+              
+          }
+          level++;
+      }
+      
+      return -1;
+    }
+}
