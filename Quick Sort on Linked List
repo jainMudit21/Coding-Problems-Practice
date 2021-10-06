@@ -1,0 +1,98 @@
+URL: https://practice.geeksforgeeks.org/problems/quick-sort-on-linked-list/1#
+
+class GfG
+{
+    public static Node quickSort(Node head)
+    {
+        return quickSort_(head)[0];
+    }
+    
+    public static Node[] quickSort_(Node head) {
+        //returns both head and tail of lists
+        
+        if(head == null || head.next == null) {
+            return new Node[] {head, head};
+        }
+        
+        int len = length(head);
+        int pivotIdx = len / 2;
+        
+        Node[] segregatedLists = segregate(head, pivotIdx);
+        
+        Node[] leftSortedList = quickSort_(segregatedLists[0]);
+        Node[] rightSortedList = quickSort_(segregatedLists[2]);
+        
+        return mergeSortedLists(leftSortedList, segregatedLists[1], rightSortedList);
+    }
+    
+    public static int length(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        
+        Node curr = node;
+        int len = 0;
+        while(curr != null) {
+            len++;
+            curr = curr.next;
+        }
+        
+        return len;
+    }
+    
+    public static Node[] segregate(Node head, int pivotIdx) {
+        //partitions the list wrt pivot node
+        Node small = new Node(-1);
+        Node large = new Node(-1);
+        
+        Node curr = head, sp = small, lp = large, pivot = head;
+        
+        while(pivotIdx-- > 0) {
+            pivot = pivot.next;
+        }
+        
+        while(curr != null) {
+            if(curr != pivot) {
+                if(curr.data <= pivot.data) {
+                    sp.next = curr;
+                    sp = sp.next;
+                }else {
+                    lp.next = curr;
+                    lp = lp.next;
+                }
+            }
+            curr = curr.next;
+        }
+        
+        sp.next = null;
+        lp.next = null;
+        pivot.next = null;
+        
+        return new Node[] {small.next, pivot, large.next};
+    }
+    
+    public static Node[] mergeSortedLists(Node[] left, Node pivot, Node[] right) {
+        
+        Node head = null, tail = null;
+        
+        if(left[0] != null && right[0] != null) {
+            left[1].next = pivot;
+            pivot.next = right[0];
+            head = left[0];
+            tail = right[1];
+        }else if(left[0] != null) {
+            head = left[0];
+            left[1].next = pivot;
+            tail = pivot;
+        }else if(right[0] != null) {
+            head = pivot;
+            pivot.next = right[0];
+            tail = right[1];
+        }else {
+            head = tail = pivot;
+        }
+        
+        return new Node[] {head, tail};
+    }
+    
+}
