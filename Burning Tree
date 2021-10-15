@@ -1,0 +1,65 @@
+URL: https://practice.geeksforgeeks.org/problems/burning-tree/1#
+
+class Solution
+{
+    /*class Node {
+    	int data;
+    	Node left;
+    	Node right;
+    
+    	Node(int data) {
+    		this.data = data;
+    		left = null;
+    		right = null;
+    	}
+    }*/
+    
+    public static int minTime(Node root, int fireNode) 
+    {
+      burningTree_(root, fireNode);
+      int val = max_time;
+      max_time = 0;
+      return val;
+    }
+    
+    public static int burningTree_(Node root, int fireNode) {
+      
+      if(root == null) {
+          return -1;
+      }
+      
+      if(root.data == fireNode) {
+          burnTree(root, null, 0);
+          return 1;
+      }
+      
+      int leftTime = burningTree_(root.left, fireNode);
+      if(leftTime != -1){
+          burnTree(root, root.left, leftTime);
+          return leftTime+1;
+      }
+      
+      int rightTime = burningTree_(root.right, fireNode);
+      if(rightTime != -1) {
+          burnTree(root, root.right, rightTime);
+          return rightTime + 1;
+      }
+      
+      return -1;
+    }
+    
+    public static void burnTree(Node root, Node blockNode, int time) {
+      
+      if(root == null || root == blockNode) {
+          return;
+      }
+      
+      max_time = Math.max(max_time, time);
+      
+      burnTree(root.left, blockNode, time + 1);
+      burnTree(root.right, blockNode, time + 1);
+      
+    }
+    
+    private static int max_time = 0;
+}
