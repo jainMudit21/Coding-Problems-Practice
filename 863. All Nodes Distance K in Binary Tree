@@ -1,0 +1,61 @@
+URL: https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        List<Integer> ans = new ArrayList<>();
+        distanceK(root, target, k, ans);
+        return ans;
+    }
+    
+    int distanceK(TreeNode node, TreeNode target, int k, List<Integer> ans) {
+      
+      if(node == null) {
+          return -1;
+      }
+      
+      if(node.val == target.val) {
+          kdown(node, k, null, ans);
+          return 1;
+      }
+      
+      int ld = distanceK(node.left, target, k, ans);
+      if(ld != -1) {
+          kdown(node, k - ld, node.left, ans);
+          return ld + 1;
+      }
+      
+      int rd = distanceK(node.right, target,k, ans);
+      if(rd != -1) {
+          kdown(node, k - rd, node.right, ans);
+          return rd + 1;
+      }
+      
+      return -1;
+    }
+    
+    void kdown(TreeNode node, int k, TreeNode blockNode, List<Integer> ans) {
+      
+      if(node == null || k < 0 || node == blockNode) {
+          return;
+      }
+      
+      if(k == 0) {
+          ans.add(node.val);
+          return;
+      }
+      
+      kdown(node.left, k - 1, blockNode, ans);
+      kdown(node.right, k - 1, blockNode, ans);
+    }
+    
+    
+}
