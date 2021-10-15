@@ -1,0 +1,84 @@
+URL: https://leetcode.com/problems/binary-search-tree-iterator/
+
+//space O(logN) if balanced BST
+class BSTIterator {
+    
+    LinkedList<TreeNode> st; //addFirst, removeFirst
+
+    public BSTIterator(TreeNode root) {
+        this.st = new LinkedList<>();
+        addAllLeft(root);
+    }
+    
+    private void addAllLeft(TreeNode node) {
+        while(node != null) {
+            this.st.addFirst(node);
+            node = node.left;
+        } 
+    }
+    
+    public int next() {
+        TreeNode topNode = this.st.removeFirst();
+        addAllLeft(topNode.right);
+        return topNode.val;
+    }
+    
+    public boolean hasNext() {
+        return st.size() != 0;
+    }
+}
+
+
+//Space O(1) - Morris Traversal
+
+class BSTIterator {
+    
+    TreeNode curr = null;
+    public BSTIterator(TreeNode root) {
+        this.curr = root;
+    }
+    
+    private TreeNode getRightMostNode(TreeNode rmn) {
+        while(rmn.right != null && rmn.right != this.curr) {
+            rmn = rmn.right;
+        }
+        return rmn;
+    }
+
+    private TreeNode morrisTraversal() {
+        TreeNode res = null;
+        
+        while(this.curr != null) {
+            TreeNode leftNode = this.curr.left;
+            if(leftNode == null) {
+                res = this.curr;
+                this.curr = this.curr.right;
+                break;
+            }else {
+                TreeNode rmn = getRightMostNode(leftNode);
+                if(rmn.right == null) {
+                    rmn.right = this.curr;//thread creation
+                    this.curr = this.curr.left;
+                }else {
+                    res = this.curr;
+                    rmn.right = null;
+                    this.curr = this.curr.right;
+                    break;
+                }
+            }
+        }
+        
+        return res;
+    }
+    
+    public int next() {
+        TreeNode res = morrisTraversal();
+        return res.val;
+    }
+
+    public boolean hasNext() {
+        return this.curr != null;
+    }
+}
+
+
