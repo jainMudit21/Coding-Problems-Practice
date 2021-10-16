@@ -1,0 +1,59 @@
+URL: https://leetcode.com/problems/binary-tree-maximum-path-sum/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int maxPathSum(TreeNode root) {
+      if(root == null) {
+          return 0;
+      }
+      return maxPathSum_(root).NTN_MaxSum;
+    }
+    
+    class pair {
+        int RTN_MaxSum = 0;
+        int NTN_MaxSum = -(int)1e9;
+    }
+    
+    int getMax(int... arr) {
+      int max = arr[0];
+      for(int ele: arr) {
+          max = Math.max(ele, max);
+      }
+      return max;
+    }
+    
+   pair maxPathSum_(TreeNode root) {
+      
+      if(root == null) {
+          return new pair();
+      }
+      
+      pair lp = maxPathSum_(root.left);
+      pair rp = maxPathSum_(root.right);
+      
+      int RTN_MaxSum = Math.max(lp.RTN_MaxSum, rp.RTN_MaxSum) + root.val;
+      
+      int NTN_MaxSum = getMax(lp.NTN_MaxSum, rp.NTN_MaxSum, lp.RTN_MaxSum +  root.val + rp.RTN_MaxSum, root.val, RTN_MaxSum);
+      
+      pair ans = new pair();
+      ans.RTN_MaxSum = Math.max(RTN_MaxSum, root.val);
+      ans.NTN_MaxSum = NTN_MaxSum;
+      
+      return ans;
+    }
+    
+}
