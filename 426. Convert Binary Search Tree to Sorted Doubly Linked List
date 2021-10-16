@@ -1,0 +1,164 @@
+URL: https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/
+
+
+//Solution 1: Using Recursion (InOrder)
+
+class Solution {
+    public Node treeToDoublyList(Node root) {
+      if(root == null) {
+          return null;
+      }
+        
+      Node dummy = new Node(-1);
+      prev = dummy;
+        
+      solve(root);
+        
+      Node ans = dummy.right;
+        
+        //breaking nodes of head
+      dummy.right = null;
+      ans.left = null;
+        //circular
+      ans.left = prev;
+      prev.right = ans;
+      return ans;
+        
+    }
+    
+    Node prev = null;
+    
+    void solve(Node root) {
+      if(root == null) {
+          return;
+      }
+      
+      solve(root.left);
+      root.left = prev;
+      prev.right = root;
+      prev = root;
+      solve(root.right);
+    }
+    
+}
+
+
+//Solution 2: Stack
+
+class Solution {
+    public Node treeToDoublyList(Node root) {
+      if(root == null) {
+          return null;
+      }
+        
+      Node dummy = new Node(-1);
+      Node prev = dummy;
+        
+      solve(root, prev);
+        
+      Node ans = dummy.right;
+        
+        //breaking nodes of head
+      dummy.right = null;
+      ans.left = null;
+        //circular
+      ans.left = prev;
+      prev.right = ans;
+      return ans;
+        
+    }
+    
+    void solve(Node root, prev) {
+      if(root == null) {
+          return;
+      }
+      
+      
+      LinkedList<Node> st = new LinkedList<>();
+      addAllLeft(root, st);
+      
+      while(st.size() != 0) {
+          Node rem = st.removeFirst();
+          
+          prev.right = rem;
+          rem.left = prev;
+          prev = rem;
+          
+          addAllLeft(rem.right, st);
+      }      
+    }
+    
+    void addAllLeft(Node node, LinkedList<Node> st) {
+      while(node != null) {
+          st.addFirst(node);
+          node = node.left;
+      }
+    }
+    
+}
+
+
+//Solution 3: Using Morris Traversal (No recursive space, no iterative space, same time complexity)
+
+
+class Solution {
+    public Node treeToDoublyList(Node root) {
+        
+      Node dummy = new Node(-1);
+      Node prev = dummy;
+      
+      if(root == null) {
+          return null;
+      }
+      
+      while(root != null) {
+          Node left = root.left;
+          if(left == null) {
+              //add it into ans
+              prev.right = root;
+              root.left = prev;
+              prev = root;
+              //move right
+              root = root.right;
+          }else {
+              Node rmn = rightMostNode(left, root);
+              if(rmn.right == null) {
+                  //create thread
+                  rmn.right = root;
+                  root = root.left;
+              }else {
+                  //break thread
+                  rmn.right = null;
+                  //then attach
+                  prev.right = root;
+                  root.left = prev;
+                  prev = root;
+                  //move ahead
+                  root = root.right;
+              }
+          }
+      }
+      
+      Node head = dummy.right;
+      
+      //creating head right
+      dummy.right = null;
+      head.left = null;
+      
+      //circular
+      head.left = prev;
+      prev.right = head;
+      
+      return head;
+        
+    }
+    
+    Node rightMostNode(Node left, Node curr) {
+      while(left.right != null && left.right != curr) {
+          left = left.right;
+      }
+      return left;
+    }
+    
+}
+
