@@ -1,0 +1,84 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/trees/maximum-path-sum-in-between-two-leaves-of-bt/ojquestion
+
+import java.util.Scanner;
+
+public class Main {
+  public static Scanner scn = new Scanner(System.in);
+
+  public static class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    TreeNode(int val) {
+      this.val = val;
+    }
+  }
+  
+  
+  static class pair {
+      int LTL = -(int)1e9 - 1;
+      int NTL = -(int)1e9 - 1;
+  }
+  
+  public static pair helper(TreeNode root) {
+      
+      pair ans = new pair();
+      if(root == null) {
+          return ans;
+      }
+      
+      if(root.left == null && root.right == null) {
+          ans.NTL = root.val;
+          return ans;
+      }
+      
+      pair lp = helper(root.left);
+      pair rp = helper(root.right);
+      
+      ans.LTL = Math.max(lp.LTL, lp.NTL);
+      
+      if(root.left != null && root.right != null) {
+          ans.LTL = Math.max(ans.LTL, lp.NTL + root.val + rp.NTL);
+      }
+      ans.NTL = Math.max(lp.NTL, rp.NTL) + root.val;
+      
+      return ans;
+      
+  }
+
+  public static int maxPathSum(TreeNode root) {
+    
+    return helper(root).LTL;
+  }
+
+  // input_Section=================================================
+
+  public static TreeNode createTree(int[] arr, int[] IDX) {
+    if (IDX[0] > arr.length || arr[IDX[0]] == -1) {
+      IDX[0]++;
+      return null;
+    }
+
+    TreeNode node = new TreeNode(arr[IDX[0]++]);
+    node.left = createTree(arr, IDX);
+    node.right = createTree(arr, IDX);
+
+    return node;
+  }
+
+  public static void solve() {
+    int n = scn.nextInt();
+    int[] arr = new int[n];
+    for (int i = 0; i < n; i++)
+      arr[i] = scn.nextInt();
+
+    int[] IDX = new int[1];
+    TreeNode root = createTree(arr, IDX);
+    System.out.println(maxPathSum(root));
+  }
+
+  public static void main(String[] args) {
+    solve();
+  }
+}
