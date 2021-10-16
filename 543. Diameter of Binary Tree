@@ -1,0 +1,77 @@
+URL: https://leetcode.com/problems/diameter-of-binary-tree/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        
+    //   int ans = diameter_01(root); //O(n^2)
+    //   int ans = diameter_01(root)[0];//O(n)
+      
+      diameter_03(root);//O(n)
+        
+      return dia;
+        
+    }
+    
+    int diameter_01(TreeNode node) {
+      if(node == null) {
+          return 0;
+      }
+      
+      int ld = diameter_01(node.left);
+      int rd = diameter_01(node.right);
+      
+      int lh = height(node.left);
+      int rh = height(node.right);
+      
+      return Math.max(Math.max(ld, rd), lh + rh + 2);
+      
+    }
+    
+    int[] diameter_02(TreeNode node) {
+      if(node == null) {
+          return new int[]{0,-1};
+      }
+      
+      int[] l = diameter_02(node.left);
+      int[] r = diameter_02(node.right);
+      
+      int[] ans = new int[2];
+      ans[0] = Math.max(Math.max(l[0], r[0]), l[1] + r[1] + 2);
+      ans[1] = Math.max(l[1], r[1]) + 1;
+      
+      return ans;
+    }
+    
+    int dia = 0;
+    int diameter_03(TreeNode node) {
+      if(node == null) {
+          return -1;
+      }
+      
+      int lh = diameter_03(node.left);
+      int rh = diameter_03(node.right);
+      
+      dia = Math.max(dia, lh + rh + 2);
+      
+      return Math.max(lh, rh) + 1;
+    }
+    
+    int height(TreeNode node) {
+      return node == null ? -1 : Math.max(height(node.left), height(node.right)) + 1;
+    }
+}
