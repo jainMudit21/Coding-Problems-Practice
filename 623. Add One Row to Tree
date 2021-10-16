@@ -1,0 +1,73 @@
+URL: https://leetcode.com/problems/add-one-row-to-tree/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode addOneRow(TreeNode root, int val, int depth) {
+        //1. go till depth - 1 and get all parent nodes in a queue
+        
+        if(depth == 1) {
+            TreeNode new_root = new TreeNode(val);
+            new_root.left = root;
+            return new_root;
+        }
+        
+        LinkedList<TreeNode> q = new LinkedList<>();
+        int dep = 1;
+        TreeNode curr = root;
+        
+        q.addLast(curr);
+        while(q.size() != 0) {
+            int size = q.size();
+            dep++;
+            if(dep >= depth)
+                break;
+            
+            while(size-- > 0) {
+                TreeNode rm = q.removeFirst();
+                
+                if(rm.left != null) {
+                    q.addLast(rm.left);
+                }
+                
+                if(rm.right != null) {
+                    q.addLast(rm.right);
+                }
+            }
+        }
+        
+        //2. now we have all nodes at depth - 1  in queue, time to process them 1 by 1
+        
+        while(q.size() != 0) {
+            TreeNode rm = q.removeFirst();
+            
+            TreeNode orig_left = rm.left;
+            TreeNode orig_right = rm.right;
+            
+            TreeNode new_left = new TreeNode(val);
+            TreeNode new_right = new TreeNode(val);
+            
+            rm.left = new_left;
+            rm.right = new_right;
+            
+            new_left.left = orig_left;
+            new_right.right = orig_right;
+        }
+        
+        return root;
+        
+    }
+}
