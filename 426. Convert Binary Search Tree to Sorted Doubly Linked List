@@ -54,26 +54,6 @@ class Solution {
       Node dummy = new Node(-1);
       Node prev = dummy;
         
-      solve(root, prev);
-        
-      Node ans = dummy.right;
-        
-        //breaking nodes of head
-      dummy.right = null;
-      ans.left = null;
-        //circular
-      ans.left = prev;
-      prev.right = ans;
-      return ans;
-        
-    }
-    
-    void solve(Node root, prev) {
-      if(root == null) {
-          return;
-      }
-      
-      
       LinkedList<Node> st = new LinkedList<>();
       addAllLeft(root, st);
       
@@ -85,7 +65,18 @@ class Solution {
           prev = rem;
           
           addAllLeft(rem.right, st);
-      }      
+      }
+        
+      Node ans = dummy.right;
+        
+        //breaking nodes of head
+      dummy.right = null;
+      ans.left = null;
+        //circular
+      ans.left = prev;
+      prev.right = ans;
+      return ans;
+        
     }
     
     void addAllLeft(Node node, LinkedList<Node> st) {
