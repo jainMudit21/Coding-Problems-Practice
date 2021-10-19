@@ -1,0 +1,84 @@
+URL: https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        max_d = -1;
+        list = new LinkedList<>();
+        
+        getNodesAtMaxDepth(root, 0);
+        
+        while(list.size() != 1) {
+            LCA = null;
+            TreeNode p = list.removeFirst();
+            TreeNode q = list.removeFirst(); 
+            
+            LCA_DFS(root, p, q);
+            
+            list.addLast(LCA);
+        }
+        
+        return list.removeFirst();
+    }
+    
+    void getNodesAtMaxDepth(TreeNode node, int d) {
+        
+        if(node == null) {
+            return;
+        }
+        
+        if(d > max_d) {
+            max_d = d;
+            list = new LinkedList<>();
+            list.add(node);
+        }else if(d == max_d) {
+            list.add(node);
+        }
+        
+        getNodesAtMaxDepth(node.left, d + 1);
+        getNodesAtMaxDepth(node.right, d + 1);
+        
+    }
+    
+    int max_d;
+    LinkedList<TreeNode> list;
+    TreeNode LCA;
+    
+    boolean LCA_DFS(TreeNode node, TreeNode p, TreeNode q) {
+        if(node == null) {
+          return false;
+        }
+
+        boolean self = (node == p || node == q);
+
+        boolean left = LCA_DFS(node.left, p, q);
+        if(LCA != null) {
+          return true;
+        }
+
+        boolean right = LCA_DFS(node.right, p, q);
+        if(LCA != null) {
+          return true;
+        }
+
+        if((left && right) || (left && self) || (right && self)) {
+          LCA = node;
+        }
+
+        return self || left || right;
+    }
+}
