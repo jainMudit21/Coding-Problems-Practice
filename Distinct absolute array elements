@@ -1,0 +1,45 @@
+URL: https://practice.geeksforgeeks.org/problems/distinct-absolute-array-elements4529/1#
+
+class Solution {
+    int distinctCount(int[] arr, int n) {
+        
+      int i = 0, j = arr.length - 1;
+      int prev = Integer.MIN_VALUE, next = Integer.MAX_VALUE;
+      int count = 0;
+      
+      while(i <= j) {
+          
+          if(Math.abs(arr[i]) < Math.abs(arr[j])) {
+              
+              if(arr[j] != next) {
+                  count++;
+              }
+              next = arr[j];
+              j--;
+              
+          }else if(Math.abs(arr[i]) > Math.abs(arr[j])) {
+              
+              if(arr[i] != prev) {
+                  count++;
+              }
+              prev = arr[i];
+              i++;
+              
+          }else {
+              
+              if(prev != arr[i] && next != arr[j] ) {
+                  count++;
+              }
+              prev = arr[i];
+              next = arr[j];
+              i++;
+              j--;
+              
+          }
+          
+      }
+      
+      return count;
+        
+    }
+}
