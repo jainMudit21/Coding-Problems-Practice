@@ -1,0 +1,36 @@
+URL: https://leetcode.com/problems/pancake-sorting/
+
+class Solution {
+    public List<Integer> pancakeSort(int[] arr) {
+        
+        List<Integer> ans = new ArrayList<>();
+        
+        int n = arr.length;
+        
+        for(int i = n - 1; i >= 0; i--) {
+            int maxIdx = i;
+            for(int j = i-1; j>=0; j--) {
+                maxIdx = (arr[maxIdx] < arr[j]) ? j: maxIdx;
+            }
+            if(maxIdx != i) {
+                reverse(arr, 0, maxIdx);
+                ans.add(maxIdx + 1);
+                
+                reverse(arr, 0, i);
+                ans.add(i + 1);
+            }
+        }
+        
+        return ans;
+    }
+    
+    void reverse(int[] arr, int si, int ei) {
+        while(si < ei) {
+            int tmp = arr[si];
+            arr[si] = arr[ei];
+            arr[ei] = tmp;
+            si++;
+            ei--;
+        }
+    }
+}
