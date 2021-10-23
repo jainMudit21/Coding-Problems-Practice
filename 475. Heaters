@@ -1,0 +1,60 @@
+URL: https://leetcode.com/problems/heaters/
+
+class Solution {
+    public int findRadius(int[] houses, int[] heaters) {
+      Arrays.sort(heaters);
+      int ans = 0;
+      for(int i=0; i < houses.length; i++) {
+          
+          int house = houses[i];
+          
+          pair p = search(house, heaters);
+          
+          int d1 = p.s == -1 ? Integer.MAX_VALUE : house - p.s;
+          int d2 = p.l == -1 ? Integer.MAX_VALUE : p.l - house;
+          
+          int minD = Math.min(d1, d2);
+          
+          ans = Math.max(ans, minD);
+      }
+      
+      return ans;
+    }
+    
+    pair search(int val, int[] arr) {
+      
+      int lo = 0;
+      int hi = arr.length - 1;
+      
+      pair p = new pair();
+      
+      while(lo <= hi) {
+          
+          int mid = lo + (hi - lo) / 2;
+          
+          if(arr[mid] == val) {
+              p.s = arr[mid];
+              p.l = arr[mid];
+              break;
+          }else if(arr[mid] > val) {
+              p.l = arr[mid];
+              hi = mid - 1;
+          }else {
+              p.s = arr[mid];
+              lo = mid + 1;
+          }
+        
+      }
+      
+      return p;
+    }
+    
+    
+    class pair {
+      int s;
+      int l;
+      pair() {
+          s = l = -1;
+      }
+    }
+}
