@@ -1,0 +1,45 @@
+URL: https://leetcode.com/problems/single-element-in-a-sorted-array/
+
+class Solution {
+    public int singleNonDuplicate(int[] arr) {
+      int lo = 0, n = arr.length, hi = n - 1;
+      
+      if(n == 1) 
+          return arr[0];
+      
+      if(arr[0] != arr[1])
+        return arr[0];
+        
+      if(arr[n-1] != arr[n-2]) 
+        return arr[n-1];
+      
+      while(lo <= hi) {
+          
+          int mid = lo + (hi - lo)/2;
+          
+          if(arr[mid] != arr[mid - 1] && arr[mid] != arr[mid + 1]) {
+              return arr[mid];
+          }else if(arr[mid] == arr[mid - 1]) {
+              //lo to mid elements count
+              int lc = mid - lo + 1;
+              
+              if(lc % 2 == 0) {
+                  lo = mid + 1;
+              }else {
+                  hi = mid - 2;
+              }
+          }else if(arr[mid] == arr[mid + 1]){
+              //mid to hi elements count
+              int rc = hi - mid + 1;
+              
+              if(rc % 2 == 0) {
+                  hi = mid - 1;
+              }else {
+                  lo = mid + 2;
+              }
+          }
+      }
+      
+      return -1;
+    }
+}
