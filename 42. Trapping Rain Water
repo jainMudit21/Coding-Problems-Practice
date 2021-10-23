@@ -1,0 +1,56 @@
+URL: https://leetcode.com/problems/trapping-rain-water/
+
+class Solution {
+    public int trap(int[] height) {
+        Stack<Integer> st = new Stack<>();
+        int ans = 0;
+        
+        for(int i=0, n = height.length; i < n; i++) {
+            
+            while(st.size() > 0 && height[st.peek()] <= height[i]) {
+                int rightMax = i;
+                int curr = height[st.pop()];
+                if(st.size() == 0)
+                    break;
+                
+                int leftMax = st.peek();
+                
+                int width = rightMax - leftMax - 1;
+                
+                ans += (Math.min(height[rightMax], height[leftMax]) - curr) * width;
+            }
+            
+            st.push(i);
+        }
+        
+        return ans;
+    }
+}
+
+
+//Solution 2: O(1) Space
+
+class Solution {
+    public int trap(int[] h) {
+        int l = 0, r = h.length - 1;
+        int lmax = 0, rmax = 0;
+        int ans = 0;
+        
+        while(l < r) {
+            
+            lmax = Math.max(h[l], lmax);
+            rmax = Math.max(h[r], rmax);
+            
+            if(lmax < rmax) {
+                ans += lmax - h[l];
+                l++;
+            }else {
+                ans += rmax - h[r];
+                r--;
+            }
+            
+        }
+        
+        return ans;
+    }
+}
