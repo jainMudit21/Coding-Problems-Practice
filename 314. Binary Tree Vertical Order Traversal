@@ -1,0 +1,79 @@
+URL: https://leetcode.com/problems/binary-tree-vertical-order-traversal/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        List<List<Integer>> list = new ArrayList<>();
+        if(root == null) {
+            return list;
+        }
+        
+        LinkedList<Pair> q = new LinkedList<>();
+        
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        int minL = 0;
+        int maxL = 0;
+        
+        q.addLast(new Pair(root, 0));
+        
+        while(q.size() != 0) {
+            
+            int size = q.size();
+            
+            while(size-- > 0) {
+                
+                Pair p = q.removeFirst();
+                
+                maxL = Math.max(maxL, p.hl);
+                minL = Math.min(minL, p.hl);
+                
+                map.putIfAbsent(p.hl, new ArrayList<>());
+                
+                map.get(p.hl).add(p.node.val);
+                
+                if(p.node.left != null) {
+                    q.addLast(new Pair(p.node.left, p.hl - 1));
+                }
+                
+                if(p.node.right != null) {
+                    q.addLast(new Pair(p.node.right, p.hl + 1));
+                }
+                
+            }
+            
+        }
+        
+        for(int i=minL; i <= maxL; i++) {
+            
+            list.add(map.get(i));
+            
+        }
+        
+        
+        return list;
+    }
+    
+    class Pair {
+        TreeNode node;
+        int hl;
+        
+        Pair(TreeNode node, int hl) {
+            this.node = node;
+            this.hl = hl;
+        }
+    }
+}
