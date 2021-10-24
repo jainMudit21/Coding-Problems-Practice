@@ -1,0 +1,38 @@
+URL: https://leetcode.com/problems/custom-sort-string/
+
+class Solution {
+    public String customSortString(String order, String s) {
+        
+        boolean[] mapOrder = new boolean[26];
+        int[] mapS = new int[26];
+        
+        for(int i=0; i < order.length(); i++) {
+            mapOrder[order.charAt(i) - 'a'] = true;
+        }
+
+        for(int i=0; i < s.length(); i++) {
+            mapS[s.charAt(i) - 'a']++;
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i < order.length(); i++) {
+            char ch = order.charAt(i);
+            if(mapS[ch - 'a'] != 0) {
+                while(mapS[ch - 'a']-- > 0) {
+                    sb.append(ch);
+                }
+            }
+        }
+        
+        for(int i=0; i < mapS.length; i++) {
+            if(mapS[i] != 0) {
+                while(mapS[i]-- > 0) {
+                    char ch = (char) ('a' + i);
+                    sb.append(ch);
+                }
+            }
+        }
+        
+        return sb.toString();
+    }
+}
