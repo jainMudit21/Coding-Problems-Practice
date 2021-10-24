@@ -1,0 +1,55 @@
+URL: https://leetcode.com/problems/simplify-path/
+
+class Solution {
+    public String simplifyPath(String path) {
+        
+        Stack<String> st = new Stack<>();
+        
+        int curr = 0;
+        int idx = 0;
+        while((idx = path.indexOf("/", curr)) != -1) {
+            
+            if(idx == curr) {
+                curr++;
+                continue;
+            }
+            
+            String substr = path.substring(curr, idx);
+            
+            if(substr.equals(".")) {
+                //do nothing
+            }else if(substr.equals("..")) {
+                if(st.size() != 0)
+                    st.pop();
+            }else {
+                st.push(substr);
+            }
+            
+            curr = idx + 1;
+        }
+        if(curr != path.length()) {
+            String substr = path.substring(curr);
+            if(substr.equals(".")) {
+                //do nothing
+            } else if(substr.equals("..")) {
+                if(st.size() != 0)
+                    st.pop();
+            } else {
+                st.push(substr);
+            }
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        while(st.size() != 0) {
+            sb.insert(0, st.pop());
+            sb.insert(0, "/");
+        }
+        
+        if(sb.length() == 0) {
+            sb.append("/");
+        }
+        
+        return sb.toString();
+        
+    }
+}
