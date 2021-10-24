@@ -1,0 +1,36 @@
+URL: https://leetcode.com/problems/next-permutation/
+
+class Solution {
+    public void nextPermutation(int[] nums) {
+        
+        int si = 0;
+        boolean ans = false;
+        for(int i=nums.length -2; i>=0; i--) {
+            
+            if(nums[i] >= nums[i+1]) {
+                
+            }else {
+                
+                int ei = i + 1;
+                while(ei < nums.length && nums[ei] > nums[i]) {
+                    ei++;
+                }
+                //swap elements
+                ei--;
+                int tmp = nums[i];
+                nums[i] = nums[ei];
+                nums[ei] = tmp;
+                ans = true;
+                si = i+1;
+                break;
+            }
+        }
+        
+        if(ans) {
+            //sort arr from i+1 to length
+            Arrays.sort(nums, si, nums.length);
+        }else {
+            Arrays.sort(nums);
+        }
+    }
+}
