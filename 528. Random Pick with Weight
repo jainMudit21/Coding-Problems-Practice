@@ -1,0 +1,48 @@
+URL: https://leetcode.com/problems/random-pick-with-weight/
+
+class Solution {
+
+    ArrayList<Integer> prefixSum;
+    int sum = 0;
+    public Solution(int[] w) {
+        prefixSum = new ArrayList<>();
+        for(int x: w) {
+            sum += x;
+            prefixSum.add(sum);
+        }
+    }
+    
+    public int pickIndex() {
+        
+        int rand = (int) (Math.random() * sum);
+        return search(rand + 1, prefixSum);
+    }
+    
+    int search(int val, ArrayList<Integer> arr) {
+        int ans = -1;
+        int lo = 0;
+        int hi = arr.size() - 1;
+        
+        while(lo <= hi) {
+            int mid = lo + (hi - lo)/2;
+            
+            if(arr.get(mid) == val) {
+                ans = mid;
+                break;
+            }else if(arr.get(mid) > val) {
+                ans = mid;
+                hi = mid - 1;
+            }else {
+                lo = mid + 1;
+            }
+        }
+        
+        return ans;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(w);
+ * int param_1 = obj.pickIndex();
+ */
