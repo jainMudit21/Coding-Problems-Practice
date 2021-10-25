@@ -1,0 +1,67 @@
+URL: https://leetcode.com/problems/walls-and-gates/
+
+class Solution {
+    public void wallsAndGates(int[][] rooms) {
+        
+        //locate all gates
+        //call bfs from each gate
+        //if INF, then put value
+        //else, if value < existing value, then put value and iterate
+        //else break
+        
+        List<int[]> list = new ArrayList<>();
+        
+        for(int i=0; i < rooms.length; i++) 
+            for(int j=0; j < rooms[0].length; j++) 
+                if(rooms[i][j] == 0)
+                    list.add(new int[]{i,j});
+        
+        if(list.size() == 0)
+            return;
+        
+        int[][]gates = list.toArray(new int[list.size()][2]);
+        for(int[] gate: gates) {
+            bfs(rooms, gate[0], gate[1], 0);
+        }
+        
+    }
+    
+    void bfs(int[][]rooms, int r, int c, int val) {
+        if(r < 0 || r >= rooms.length || c < 0 || c >= rooms[0].length || rooms[r][c] == -1)
+            return;
+        
+        Queue<pair> q = new LinkedList<>();
+        
+        q.add(new pair(r, c, val));
+        int[][] dirs = {{0,1}, {0,-1}, {1, 0}, {-1, 0}};
+        
+        while(q.size() > 0) {
+            
+            pair p = q.remove();
+            
+            for(int[] dir: dirs) {
+                int ro = p.r + dir[0];
+                int co = p.c + dir[1];
+                
+                if(ro < 0 || ro >= rooms.length || co < 0 || co >= rooms[0].length || rooms[ro][co] <= 0)
+                    continue;
+                
+                if(rooms[ro][co] <= p.val + 1)
+                    continue;
+                
+                rooms[ro][co] = p.val + 1;
+                
+                q.add(new pair(ro, co, p.val + 1));
+            }
+        }
+    }
+    
+    class pair {
+        int r, c, val;
+        pair(int r, int c, int val) {
+            this.r = r;
+            this.c = c;
+            this.val = val;
+        }
+    }
+}
