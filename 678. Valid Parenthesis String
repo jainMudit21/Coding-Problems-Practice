@@ -1,0 +1,43 @@
+URL: https://leetcode.com/problems/valid-parenthesis-string/
+
+class Solution {
+    public boolean checkValidString(String s) {
+        
+        Stack<Integer> braceSt = new Stack<>();
+        Stack<Integer> starSt = new Stack<>();
+        
+        for(int i=0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if(ch == '(') {
+                braceSt.push(i);
+            }else if(ch == ')') {
+                
+                if(braceSt.size() != 0) {
+                    braceSt.pop();
+                }else if(starSt.size() != 0) {
+                    starSt.pop();
+                }else {
+                    return false;
+                }
+                
+            }else {
+                starSt.push(i);
+            }
+        }
+        
+        while(braceSt.size() != 0) {
+            if(starSt.size() == 0)
+                return false;
+            
+            if(braceSt.peek() < starSt.peek()) {
+                braceSt.pop();
+                starSt.pop();
+            }else {
+                return false;
+            }
+        }
+        
+        return true;
+        
+    }
+}
