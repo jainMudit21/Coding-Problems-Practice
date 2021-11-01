@@ -1,0 +1,108 @@
+URL: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/graphs/pepcoder-and-reversing-official/ojquestion
+
+Title: Pepcoder And Reversing
+
+/* Problem Statement:
+You are given 2 integers N and M , N is the number of vertices, M is the number of edges. You'll also be given ai and bi where ai and bi represents an edge from a vertex ai to a vertex bi.
+
+You have to find the minimum number of edges you have to reverse in order to have atleast one path from vertex 1 to N, where the vertices are numbered from 1 to N.
+
+Input Format
+First line contains two space separated integers,N and M. Then M lines follow, each line has 2 space separated integers ai and bi.
+Output Format
+Print the minimum number of edges we need to revert. If there is no way of having at least one path from 1 to N, print -1.
+
+Constraints
+1<= N <= 10^4
+1<= M <= 10^6
+1<= ai, bi <= N
+
+
+Sample Input
+7 7
+1 2 
+3 2
+3 4
+7 4
+6 2
+5 6
+7 5
+
+Sample Output
+2
+
+*/
+
+
+Solution:
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+	public static void main(String[] args) throws NumberFormatException, IOException {
+	    
+	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	    
+	    String[] st = br.readLine().split(" ");
+	    int n = Integer.parseInt(st[0]);
+	    int m = Integer.parseInt(st[1]);
+	    
+	    ArrayList<ArrayList<Pair>> graph = new ArrayList<>();
+	    
+	    for(int i=0; i < n; i++) {
+	        graph.add(new ArrayList<>());
+	    }
+	    
+	    for(int i = 0; i < m; i++) {
+	        st = br.readLine().split(" ");
+	        int u = Integer.parseInt(st[0]) - 1;
+	        int v = Integer.parseInt(st[1]) - 1;
+	        
+	        graph.get(u).add(new Pair(v, 0));
+	        graph.get(v).add(new Pair(u, 1));
+	    }
+	    
+	    LinkedList<Pair> q = new LinkedList<>();
+	    boolean vis[] = new boolean[n];
+	    q.addLast(new Pair(0,0));
+	    
+	    while(q.size() > 0) {
+	        
+	        Pair rem = q.removeFirst();
+	        
+	        if(rem.vtx == n-1) {
+	            System.out.println(rem.wt);
+	            return;
+	        }
+	        
+	        vis[rem.vtx] = true;
+	        
+	        for(Pair nbrs : graph.get(rem.vtx)) {
+	            if(vis[nbrs.vtx] == true) {
+	                continue;
+	            }
+	            
+	            if(nbrs.wt == 0) {
+	                q.addFirst(new Pair(nbrs.vtx, rem.wt));
+	            }else {
+	                q.addLast(new Pair(nbrs.vtx, rem.wt + 1));
+	            }
+	        }
+	        
+	    }
+	    
+	    System.out.println(-1);
+	    
+	}
+	
+	public static class Pair {
+	    int vtx;
+	    int wt;
+	    
+	    Pair(int vtx, int wt) {
+	        this.vtx = vtx;
+	        this.wt = wt;
+	    }
+	}
+}
