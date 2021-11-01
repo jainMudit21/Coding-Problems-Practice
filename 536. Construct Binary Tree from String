@@ -1,0 +1,67 @@
+URL: https://leetcode.com/problems/construct-binary-tree-from-string/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode str2tree(String s) {
+        if(s.length() == 0)
+            return null;
+        
+        
+        return solve(s);
+        
+    }
+    int idx = 0;
+    
+    TreeNode solve(String s) {
+        
+        if(idx >= s.length())
+            return null;
+        
+        char ch = s.charAt(idx);
+        TreeNode node = null;
+        
+        if(ch == '-' || Character.isDigit(ch)) {
+            int sign = 1;
+            if(ch == '-') {
+                sign = -1;
+                idx++;
+            }
+            int val = 0;
+            while(idx < s.length() && Character.isDigit(s.charAt(idx))) {
+                val = val * 10 + (s.charAt(idx) - '0');
+                idx++;
+            }
+            idx--;
+            node = new TreeNode(val * sign);
+            idx++;
+        }
+        
+        if(idx < s.length() && s.charAt(idx) == '(') {
+            idx++;
+            node.left = solve(s);
+        }
+        
+        if(idx < s.length() && s.charAt(idx) == '(') {
+            idx++;
+            node.right = solve(s);
+        }
+        
+        idx++;
+        return node;
+        
+    }
+}
