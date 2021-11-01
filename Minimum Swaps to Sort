@@ -1,0 +1,53 @@
+URL: https://practice.geeksforgeeks.org/problems/minimum-swaps/1#
+
+class Solution
+{
+    //Function to find the minimum number of swaps required to sort the array.
+    public int minSwaps(int arr1[])
+    {
+        
+        int n = arr1.length;
+        Pair[] arr = new Pair[n];
+        
+        for(int i=0; i < n; i++) {
+          arr[i] = new Pair(arr1[i], i);
+        }
+        
+        Arrays.sort(arr);
+        int ans = 0;
+        
+        boolean[] vis = new boolean[n];
+        
+        for(int i=0; i < n; i++) {
+          if(vis[i] || arr[i].idx == i) {
+              continue;
+          }
+          
+          int clen = 0;
+          int j = i;
+          while(vis[j] == false) {
+              vis[j] = true;
+              j = arr[j].idx;
+              clen++;
+          }
+          
+          ans += (clen - 1);
+        }
+        return ans;
+    }
+    
+    class Pair implements Comparable<Pair> {
+        int val;
+        int idx;
+    
+        Pair(int val, int idx) {
+          this.val = val;
+          this.idx = idx;
+        }
+    
+        @Override
+        public int compareTo(Pair o) {
+          return this.val - o.val;
+        }
+    }
+}
