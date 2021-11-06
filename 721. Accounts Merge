@@ -1,0 +1,80 @@
+URL: https://leetcode.com/problems/accounts-merge/
+
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        
+        HashMap<String, Integer> etid = new HashMap<>();//email to id
+        HashMap<String, String> etn = new HashMap<>();//email to name
+        
+        par = new int[10001];
+        
+        for(int i=0; i < 10001; i++)
+            par[i] = i;
+        
+        int uuid = 0;
+        for(List<String> act: accounts) {
+            String name = "";
+            for(String email: act) {
+                if(name == "") {
+                    name = email;
+                    continue;
+                }
+                
+                if(!etid.containsKey(email)) {
+                    etid.put(email, uuid);
+                    uuid++;
+                }
+                
+                if(!etn.containsKey(email)) {
+                    etn.put(email, name);
+                }
+                
+                int par1 = find(etid.get(act.get(1)));
+                int par2 = find(etid.get(email));
+                
+                if(par1 != par2) {
+                    par[par2] = par1;
+                }
+            }
+        }
+        
+        //after merging ids, now create a map for parent and email 
+        
+        HashMap<Integer, List<String>> pte = new HashMap<>();//parent to email
+        
+        for(String email: etn.keySet()) {
+            int id = etid.get(email);
+            int par = find(id);
+            
+            if(pte.containsKey(par)) {
+                pte.get(par).add(email);
+            }else {
+                List<String> list = new ArrayList<>();
+                list.add(email);
+                pte.put(par, list);
+            }
+        }
+        
+        List<List<String>> ans = new ArrayList<>();
+        
+        for(List<String> emails: pte.values()) {
+            Collections.sort(emails);
+            
+            List<String> addMe = new ArrayList<>();
+            addMe.add(etn.get(emails.get(0)));
+            addMe.addAll(emails);
+            
+            ans.add(addMe);
+        }
+        
+        return ans;
+    }
+    
+    int find(int val) {
+        if(val == par[val])
+            return val;
+        return (par[val] = find(par[val]));
+    }
+    
+    int par[];
+}
