@@ -1,0 +1,104 @@
+URL: https://leetcode.com/problems/word-break-ii/
+
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        HashSet<String> hs = new HashSet<>();
+        for(String st: wordDict)
+            hs.add(st);
+        
+        list = new ArrayList<>();
+        helper(s, hs, "");
+        
+        return list;
+    }
+    
+    List<String> list;
+    
+    void helper(String s, HashSet<String> hs, String ans) {
+        if(s.length() == 0) {
+            list.add(ans.substring(1, ans.length()));
+            return;
+        }
+        
+        for(int i=1; i <= s.length(); i++) {
+            String sub = s.substring(0, i);
+            if(hs.contains(sub)) {
+                helper(s.substring(i), hs, ans + " " + sub);
+            }
+        }
+    }
+}
+
+
+
+//Solution 2
+
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        HashSet<String> hs = new HashSet<>();
+        for(String st: wordDict)
+            hs.add(st);
+        
+        list = new ArrayList<>();
+        helper(s, hs, "");
+        
+        return list;
+    }
+    
+    List<String> list;
+    
+    void helper(String s, HashSet<String> hs, String ans) {
+        if(s.length() == 0) {
+            list.add(ans.substring(1, ans.length()));
+            return;
+        }
+        
+        for(String key: hs) {
+            if(s.startsWith(key)) {
+                helper(s.substring(key.length()), hs, ans + " " + key);
+            }
+        }
+    }
+}
+
+
+//Solution 3
+
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        map = new HashMap<>();
+        return wordBreakHelper(s, s.length(), wordDict);
+    }
+    
+    HashMap<Integer, List<String>> map;
+
+    private List<String> wordBreakHelper(String input, int end, List<String> wordDict) {
+        ArrayList<String> res = new ArrayList<>();
+        
+        // We have traversed the input and are done with breaking up the word
+        if(end == 0) return new ArrayList<>(Arrays.asList(""));
+        
+        // Using dynamic programming for optimisation 
+        // where the same words will have to broken down again
+        if (map.containsKey(end)) {
+            return map.get(end);
+        }
+         
+        // Keeping the end at the end of the input
+        // start counter moves along the input letters
+        for (int start = 0; start < end; start++) {
+            String sub = input.substring(start, end);
+            if(wordDict.contains(sub)){
+                // Once the last word in the input is found in the dictionary,
+                // we repeat the wordbreak
+                List<String> tmpList = wordBreakHelper(input, start, wordDict);
+                // and append the 'sub' at the end of every phrase in tmpList
+                for (String tmpStr : tmpList){
+                    res.add(tmpStr.length() == 0 ? sub : tmpStr + " " + sub);
+                }
+            }
+        }
+        map.put(end, res);
+        return res;
+    }   
+}
