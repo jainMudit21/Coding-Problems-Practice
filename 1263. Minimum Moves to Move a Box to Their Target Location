@@ -1,0 +1,144 @@
+URL: https://leetcode.com/problems/minimum-moves-to-move-a-box-to-their-target-location/
+
+class Solution {
+    public int minPushBox(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        
+        Pair target = new Pair();
+        Pair box = new Pair();
+        Pair person = new Pair();
+        
+        for(int i=0; i < m; i++)
+            for(int j=0; j < n; j++)
+                if(grid[i][j] == 'T')
+                    target = new Pair(i,j);
+                else if(grid[i][j] == 'B')
+                    box = new Pair(i, j);
+                else if(grid[i][j] == 'S')
+                    person = new Pair(i, j);
+        
+        
+        boolean[][][][] visited = new boolean[m][n][m][n];
+        int[][][][] distance = new int[m][n][m][n];
+        
+        List<Queue<Position>> queues = new ArrayList<>();
+        queues.add(new LinkedList<>());
+        queues.get(0).add(new Position(box, person));
+        
+        int maxDistance = queues.size();
+        
+        for(int curr_dist=0; curr_dist < maxDistance; curr_dist++) {
+            
+            int elementsInCurrDist = queues.get(curr_dist).size();
+            
+            while(queues.get(curr_dist).size() != 0) {
+                
+                Position rem = queues.get(curr_dist).remove();
+                
+                if(rem.box.equals(target)) {
+                    return curr_dist;
+                }
+                
+                if(visited[rem.box.i][rem.box.j][rem.person.i][rem.person.j]) {
+                    continue;
+                }
+                
+                visited[rem.box.i][rem.box.j][rem.person.i][rem.person.j] = true;
+                
+                for(int[] dir: dirs) {
+                    int rowdash = rem.person.i + dir[0];
+                    int coldash = rem.person.j + dir[1];
+                    
+                    if(available(rowdash, coldash, grid)) {
+                        Pair new_box = new Pair(rem.box.i, rem.box.j);
+                        Pair new_person = new Pair(rowdash, coldash);
+                        
+                        int push = 0;
+                        if(new_box.equals(new_person)) {
+                            push++;
+                            new_box.i += dir[0];
+                            new_box.j += dir[1];
+                            
+                            if(!available(new_box.i, new_box.j, grid)) {
+                                continue;//to next dir iteration
+                            }
+                        }
+                        
+                        Position new_pos = new Position(new_box, new_person);
+                        if(visited[new_pos.box.i][new_pos.box.j][new_pos.person.i][new_pos.person.j])
+                            continue;
+                        
+                        int distanceToReachHere = push + /*distance of removed obj from queue*/ distance[rem.box.i][rem.box.j][rem.person.i][rem.person.j];
+                        
+                        if(distanceToReachHere < /*already distance in that position in array*/ distance[new_pos.box.i][new_pos.box.j][new_pos.person.i][new_pos.person.j] || distance[new_pos.box.i][new_pos.box.j][new_pos.person.i][new_pos.person.j] == 0) {
+                            distance[new_pos.box.i][new_pos.box.j][new_pos.person.i][new_pos.person.j] = distanceToReachHere;
+                            
+                            while(distanceToReachHere >= queues.size()) {
+                                queues.add(new LinkedList<>());
+                            }
+                            queues.get(distanceToReachHere).add(new_pos);
+                        }
+                    }
+                }
+            }
+            maxDistance = queues.size();
+        }
+        
+        return -1;
+    }
+    
+    boolean available(int r, int c, char[][] grid) {
+        if(r < 0 || c < 0 || r >= grid.length || c >= grid[0].length) {
+            return false;
+        }
+        
+        if(grid[r][c] == '#') {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    int[][] dirs = { {0, 1}, {1, 0}, {-1, 0}, {0, -1} };
+    
+    class Pair {
+        int i, j;
+        Pair(int i, int j) {
+            this.i = i;
+            this.j = j;
+        }
+        Pair() {}
+        
+        @Override
+        public boolean equals(Object o) {
+
+            // If the object is compared with itself then return true 
+            if (o == this) {
+                return true;
+            }
+
+            /* Check if o is an instance of Complex or not
+              "null instanceof [type]" also returns false */
+            if (!(o instanceof Pair)) {
+                return false;
+            }
+
+            // typecast o to Complex so that we can compare data members
+            Pair c = (Pair) o;
+
+            // Compare the data members and return accordingly
+            return Integer.compare(i, c.i) == 0
+                    && Integer.compare(j, c.j) == 0;
+        }
+    }
+    
+    class Position {
+        Pair box, person;
+        Position(Pair box, Pair person) {
+            this.box = box;
+            this.person = person;
+        }
+        Position() {box = null; person = null;}
+    }
+}
