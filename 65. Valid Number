@@ -1,0 +1,239 @@
+URL: https://leetcode.com/problems/valid-number/
+
+class Solution {
+    public boolean isNumber(String s) {
+        // 1. check E
+        //  if E, check decimal before, check integer after
+        //  else check decimal
+        
+        // 2. how to check decimal
+        // check  .
+        // if ., check integer before
+        //       check digits after
+		// else check integer
+        
+        // 3. how to check integer
+        // if sign, check sign
+        //          check digits
+		// else check digits
+        
+        if(s.indexOf("e") != -1){
+            return isDecimal(s.substring(0, s.indexOf("e")), true) && isInteger(s.substring(s.indexOf("e") + 1), true);    
+        }
+        else if(s.indexOf("E") != -1){
+            return isDecimal(s.substring(0, s.indexOf("E")), true) && isInteger(s.substring(s.indexOf("E") + 1), true);    
+        }
+        
+        else{
+            return isDecimal(s, false);
+        }
+    }
+    
+    
+    private boolean isDecimal(String s, boolean hasContent){
+        if(s.indexOf(".") != -1){
+            return (isInteger(s.substring(0, s.indexOf(".")), false) && isDigit(s.substring(s.indexOf(".") + 1), true))
+                || (isInteger(s.substring(0, s.indexOf(".")), true) && isDigit(s.substring(s.indexOf(".") + 1), false))
+                || (isInteger(s.substring(0, s.indexOf(".")), true) && isDigit(s.substring(s.indexOf(".") + 1), true));
+        }
+        else{
+            return isInteger(s, hasContent);
+        }
+    }
+    
+    private boolean isInteger(String s, boolean hasContent){
+        if(s.indexOf("+") != -1){
+            return s.indexOf("+") == 0 && isDigit(s.substring(1), hasContent);
+        }
+        else if(s.indexOf("-") != -1){
+            return s.indexOf("-") == 0 && isDigit(s.substring(1), hasContent);
+        }
+        else {
+            return isDigit(s, hasContent);
+        }
+    }
+    
+    private boolean isDigit(String s, boolean hasContent){
+        if(s.length() == 0){
+            return !hasContent;
+        }
+        
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) < '0' || s.charAt(i) > '9'){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+
+
+
+//Solution 2
+class Solution {
+    char[] chars;
+    int idx = 0;
+    
+    public boolean isNumber(String s) {
+        this.chars = s.toCharArray();
+        return expression();
+    }
+    
+    public char peek() {
+        if (idx >= chars.length) {
+            return 0;
+        }
+        return chars[idx];
+    }
+    
+    public char getNext() {
+        if (idx >= chars.length) {
+            return 0;
+        }
+        return chars[idx++];
+    }
+    
+    public boolean getInteger() {
+        boolean hasNums = false;
+        while (peek() >= '0' && peek() <= '9') {
+            hasNums = true;
+            getNext();
+        }
+        
+        return (idx >= chars.length) && hasNums;
+    }
+    
+    public boolean getNumber() {
+        boolean hasNums = false;
+        while (peek() >= '0' && peek() <= '9') {
+            hasNums = true;
+            getNext();
+        }
+        
+        if (!hasNums && peek() != '.') {
+            return false;
+        }
+        
+        if (idx < chars.length && peek() != 'e' && peek() != 'E' && peek() != '.') {
+            return false;
+        }
+        
+        if (peek() == '.') {
+            getNext();
+            boolean hasDec = false;
+            while (peek() >= '0' && peek() <= '9') {
+                hasDec = true;
+                getNext();
+            }
+            if (!hasNums && ! hasDec) {
+                return false;
+            }
+            if (idx < chars.length && peek() != 'e' && peek() != 'E') {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public boolean expression() {
+        if (peek() == '+' || peek() == '-') {
+            getNext();
+        }
+        
+        if (!getNumber()) {
+            return false;
+        }
+        
+        if (peek() == 'e' || peek() == 'E') {
+            getNext();
+            if (peek() == '+' || peek() == '-') {
+                getNext();
+            }
+            if (!getInteger()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
+
+
+
+
+//Solution 3
+
+class Solution {
+    public boolean isNumber(String s) {
+        
+        if (s.length() == 0) {
+            return false;
+        }
+        
+        Set<Character> validCharacters = new HashSet<>();
+        // These are the only valid leading characters
+        String validCharacterString = "0123456789.+-";
+        
+        for (int i = 0 ;i < validCharacterString.length(); i++){
+            char validCharacter = validCharacterString.charAt(i);
+            validCharacters.add(validCharacter);
+        }
+        
+        // not all end states are valid
+        boolean done = false;
+        // track if we have an exponent
+        boolean hasExponent = false;
+        
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            
+            // if the character isn't valid, just exit
+            if (!validCharacters.contains(c)) {
+                return false;
+            }
+            
+            // only the first pass allows a sign, remove these
+            validCharacters.remove('+');
+            validCharacters.remove('-');
+            
+            if (Character.isDigit(c)) {
+                done = true; // a digit signifes a valid end
+                if (!hasExponent) {
+                    // if we haven't seen an exponent, we allow them now
+                    validCharacters.add('e');
+                    validCharacters.add('E');
+                }
+                continue;
+            }
+            
+            switch(c) {
+                case '.':
+                    // only one decimal is allowed
+                    validCharacters.remove(c);
+                    break;
+                case 'e':
+                case 'E':
+                    // Once we've seen a digit, e is the only character that necessitates an additional digit
+                    done = false;
+                    // We're now in an exponent
+                    hasExponent = true;
+                    // +/- are now valid for one more pass
+                    validCharacters.add('+');
+                    validCharacters.add('-');
+                    // No decimal or additional exponents are allowed
+                    validCharacters.remove('.');
+                    validCharacters.remove('e');
+                    validCharacters.remove('E');
+                    break;
+                    
+            }
+        }
+        
+        return done;
+        
+    }
+
+}
