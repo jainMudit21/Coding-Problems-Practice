@@ -1,0 +1,37 @@
+URL: https://leetcode.com/problems/task-scheduler/
+
+
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        if(n == 0)
+            return tasks.length;
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        int[] map = new int[26];
+        
+        for(char ch: tasks)
+            map[ch - 'A']++;
+        
+        for(int x: map)
+            if(x != 0)
+                pq.add(x);
+        
+        HashMap<Integer, Integer> hm = new HashMap<>(); //Time -> Count
+        int time = 0;
+        
+        while(!hm.isEmpty() || !pq.isEmpty()) {
+            if(hm.containsKey(time))
+                pq.add(hm.remove(time));
+            
+            if(pq.size() != 0) {
+                int rm = pq.remove();
+                time++;
+                if(rm != 1)
+                    hm.put(time + n, rm - 1);
+            }else
+                time++;
+            
+        }
+        return time;
+    }
+}
