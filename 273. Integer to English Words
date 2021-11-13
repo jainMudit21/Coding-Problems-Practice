@@ -1,0 +1,315 @@
+URL: https://leetcode.com/problems/integer-to-english-words/
+
+//My solution
+class Solution {
+    public String numberToWords(int num) {
+        
+        Map<Integer, String[]> rules = new HashMap<>();
+        String[] strs = new String[]{"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+        rules.put(1, strs);
+        
+        strs = new String[]{null, "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+        rules.put(2, strs);
+        
+        String[]for1Only = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+        
+        
+        String pattern = "112"; //can be used for rules map
+        String appendMe[] = {"Thousand", "Million", "Billion"};
+        String common = "Hundred";
+        int appendIdx = 0;
+        
+        StringBuilder sb = new StringBuilder();
+        String s = num+"";
+        int digit = 1;
+        int lastDigitNotZero = 0;
+        
+        for(int i = s.length() - 1; i>=0; i--) {
+            
+            int letter = (s.charAt(i) - '0');
+            
+            if(digit <= 2) {
+                if(letter == 0) {
+                    digit++;
+                    continue;
+                }
+                
+                String add = rules.get(digit)[letter - 1];
+                if(add == null) {
+                    sb.delete(0, sb.indexOf(" ") + 1);
+                    sb.insert(0, for1Only[s.charAt(i+1) - '0'] + " ");
+                }else {
+                    sb.insert(0, add + " ");
+                }
+                
+                lastDigitNotZero = digit;
+            }else {
+                
+                if(letter == 0) {
+                    if(digit % 3 == 1) {
+                        if(appendIdx == 0) {
+                            sb.insert(0, appendMe[appendIdx] + " ");
+                        }
+                        else {
+                            if(digit - lastDigitNotZero > 3) {
+                                sb.delete(0, sb.indexOf(" ") + 1);
+                                sb.insert(0, appendMe[appendIdx] + " ");
+                            }else {
+                                sb.insert(0, appendMe[appendIdx] + " ");
+                            }
+                        }
+                        appendIdx++;
+                    }
+                    digit++;
+                    continue;
+                }
+                
+                
+                if(digit % 3 == 0) {
+                    String add = rules.get(pattern.charAt(digit % 3) - '0')[letter - 1];
+                    sb.insert(0, add + " " + common + " ");
+                }else if(digit % 3 == 1) {
+                    String add = rules.get(pattern.charAt(digit % 3) - '0')[letter - 1];
+                    if(appendIdx == 0) {
+                        sb.insert(0, add + " " + appendMe[appendIdx] + " ");
+                    }else {
+                        if(digit - lastDigitNotZero > 3) {
+                            sb.delete(0, sb.indexOf(" ") + 1);
+                            sb.insert(0, add + " " + appendMe[appendIdx] + " ");
+                        }else {
+                            sb.insert(0, add + " " + appendMe[appendIdx] + " ");
+                        }
+                    }
+                    appendIdx++;
+                }else {
+                    String add = rules.get(pattern.charAt(digit % 3) - '0')[letter - 1];
+                    if(add == null) {
+                        if(s.charAt(i+1) - '0' != 0)
+                            sb.delete(0, sb.indexOf(" ") + 1);
+                        
+                        sb.insert(0, for1Only[s.charAt(i+1) - '0'] + " ");
+                    }else {
+                        sb.insert(0, add + " ");
+                    }
+                }
+                lastDigitNotZero = digit;
+            }
+            digit++;
+        }
+        
+        if(sb.length() == 0)
+            return "Zero";
+        
+        return sb.substring(0, sb.length() - 1);
+    }
+}
+
+
+
+
+//Leetcode optimized solution
+
+class Solution {
+    public String numberToWords(int num) {
+        
+        if(num == 0) {
+            return "Zero";
+        }
+        
+        int bil = (int)(num / (Math.pow(10, 9)));
+        int mil = (int)((num % Math.pow(10, 9)) / Math.pow(10, 6));
+        int thou = (int)((num % Math.pow(10, 6)) / Math.pow(10, 3));
+        int rem = (int) (num % Math.pow(10, 3));
+        
+        StringBuilder sb = new StringBuilder();
+        if(bil != 0) {
+            sb.append(findTuple(bil));
+            sb.append(" ");
+            sb.append("Billion ");
+        }
+        if(mil != 0) {
+            sb.append(findTuple(mil));
+            sb.append(" ");
+            sb.append("Million ");
+        }
+        if(thou != 0) {
+            sb.append(findTuple(thou));
+            sb.append(" ");
+            sb.append("Thousand ");
+        }
+        if(rem != 0) {
+            sb.append(findTuple(rem));
+        }
+        return sb.toString().trim();
+    }
+    
+    private String findTuple(int tuple) {
+        int h = tuple/100;
+        int t = (tuple%100) / 10;
+        int o = tuple%10;
+        
+        StringBuilder sb = new StringBuilder();
+        if( h != 0) {
+            sb.append(findSingles(h));
+            sb.append(" ");
+            sb.append("Hundred ");
+        }
+        
+        if(t >= 2) {
+            sb.append(findSingles(t*10));
+            sb.append(" ");
+        }
+        
+        if(t == 1) {
+            o = o+10;
+        }
+        
+        if(o != 0) {
+            sb.append(findSingles(o));
+        }
+        return sb.toString().trim();
+    }
+    
+    private String findSingles(int single) {
+        switch(single) {
+            case 1: return "One";
+            case 2: return "Two";
+            case 3: return "Three";
+            case 4: return "Four";
+            case 5: return "Five";
+            case 6: return "Six";
+            case 7: return "Seven";
+            case 8: return "Eight";
+            case 9: return "Nine";
+            case 10: return "Ten";
+            case 11: return "Eleven";
+            case 12: return "Twelve";
+            case 13: return "Thirteen";
+            case 14: return "Fourteen";
+            case 15: return "Fifteen";
+            case 16: return "Sixteen";
+            case 17: return "Seventeen";
+            case 18: return "Eighteen";
+            case 19: return "Nineteen";
+            case 20: return "Twenty";
+            case 30: return "Thirty";
+            case 40: return "Forty";
+            case 50: return "Fifty";
+            case 60: return "Sixty";
+            case 70: return "Seventy";
+            case 80: return "Eighty";
+            case 90: return "Ninety";
+        }
+        return null;
+    }
+}
+
+
+//Leetcode solution
+
+class Solution {
+  public String one(int num) {
+    switch(num) {
+      case 1: return "One";
+      case 2: return "Two";
+      case 3: return "Three";
+      case 4: return "Four";
+      case 5: return "Five";
+      case 6: return "Six";
+      case 7: return "Seven";
+      case 8: return "Eight";
+      case 9: return "Nine";
+    }
+    return "";
+  }
+
+  public String twoLessThan20(int num) {
+    switch(num) {
+      case 10: return "Ten";
+      case 11: return "Eleven";
+      case 12: return "Twelve";
+      case 13: return "Thirteen";
+      case 14: return "Fourteen";
+      case 15: return "Fifteen";
+      case 16: return "Sixteen";
+      case 17: return "Seventeen";
+      case 18: return "Eighteen";
+      case 19: return "Nineteen";
+    }
+    return "";
+  }
+
+  public String ten(int num) {
+    switch(num) {
+      case 2: return "Twenty";
+      case 3: return "Thirty";
+      case 4: return "Forty";
+      case 5: return "Fifty";
+      case 6: return "Sixty";
+      case 7: return "Seventy";
+      case 8: return "Eighty";
+      case 9: return "Ninety";
+    }
+    return "";
+  }
+
+  public String two(int num) {
+    if (num == 0)
+      return "";
+    else if (num < 10)
+      return one(num);
+    else if (num < 20)
+      return twoLessThan20(num);
+    else {
+      int tenner = num / 10;
+      int rest = num - tenner * 10;
+      if (rest != 0)
+        return ten(tenner) + " " + one(rest);
+      else
+        return ten(tenner);
+    }
+  }
+
+  public String three(int num) {
+    int hundred = num / 100;
+    int rest = num - hundred * 100;
+    String res = "";
+    if (hundred*rest != 0)
+      res = one(hundred) + " Hundred " + two(rest);
+    else if ((hundred == 0) && (rest != 0))
+      res = two(rest);
+    else if ((hundred != 0) && (rest == 0))
+      res = one(hundred) + " Hundred";
+    return res;
+  }
+
+  public String numberToWords(int num) {
+    if (num == 0)
+      return "Zero";
+
+    int billion = num / 1000000000;
+    int million = (num - billion * 1000000000) / 1000000;
+    int thousand = (num - billion * 1000000000 - million * 1000000) / 1000;
+    int rest = num - billion * 1000000000 - million * 1000000 - thousand * 1000;
+
+    String result = "";
+    if (billion != 0)
+      result = three(billion) + " Billion";
+    if (million != 0) {
+      if (! result.isEmpty())
+        result += " ";
+      result += three(million) + " Million";
+    }
+    if (thousand != 0) {
+      if (! result.isEmpty())
+        result += " ";
+      result += three(thousand) + " Thousand";
+    }
+    if (rest != 0) {
+      if (! result.isEmpty())
+        result += " ";
+      result += three(rest);
+    }
+    return result;
+  }
+}
