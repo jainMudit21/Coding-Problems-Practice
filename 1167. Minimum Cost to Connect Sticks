@@ -1,0 +1,21 @@
+URL: https://leetcode.com/problems/minimum-cost-to-connect-sticks/
+
+
+class Solution {
+    public int connectSticks(int[] sticks) {
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        
+        for(int x: sticks)
+            pq.add(x);
+        
+        int ans = 0;
+        while(pq.size() > 1) {
+            int sum = pq.remove() + pq.remove();
+            ans += sum;
+            pq.add(sum);
+        }
+        
+        return ans;
+    }
+}
