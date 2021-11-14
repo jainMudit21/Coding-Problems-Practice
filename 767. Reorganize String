@@ -1,0 +1,47 @@
+URL: https://leetcode.com/problems/reorganize-string/
+
+class Solution {
+    public String reorganizeString(String s) {
+        if(s.length() == 0)
+            return "";
+        
+        int[] map = new int[26];
+        for(char ch: s.toCharArray())
+            map[ch - 'a']++;
+
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> (b.f - a.f));
+        
+        for(int i=0; i < map.length; i++)
+            if(map[i] > 0)
+                pq.add(new Pair((char) ('a' + i), map[i]));
+        
+        StringBuilder sb = new StringBuilder();
+        Pair block = pq.poll();
+        sb.append(block.ch);
+        block.f--;
+        
+        while(pq.size() != 0) {
+            Pair tmp = pq.poll();
+            sb.append(tmp.ch);
+            tmp.f--;
+            
+            if(block.f > 0)
+                pq.add(block);
+
+            block = tmp;
+        }
+        if(block.f > 0)
+            return "";
+        
+        return sb.toString();
+    }
+    
+    class Pair {
+        char ch;
+        int f;
+        Pair(char ch, int f) {
+            this.ch = ch;
+            this.f = f;
+        }
+    }
+}
