@@ -1,0 +1,89 @@
+URL: https://leetcode.com/problems/lru-cache/
+
+
+class LRUCache {
+
+    class Node {
+        int key, value;
+        Node next, prev;
+    }
+    
+    private void addNode(Node node) {
+        Node nbr = head.next;
+        
+        node.next = nbr;
+        node.prev = head;
+        
+        head.next = node;
+        nbr.prev = node;
+    }
+    
+    private void removeNode(Node node) {
+        Node prvNbr = node.prev;
+        Node nxtNbr = node.next;
+        
+        prvNbr.next = nxtNbr;
+        nxtNbr.prev = prvNbr;
+        
+        node.next = node.prev = null;
+    }
+    
+    private void moveToFront(Node node) {
+        removeNode(node);
+        addNode(node);
+    }
+    
+    HashMap<Integer, Node> cache;
+    Node head, tail;
+    int cap;
+    public LRUCache(int capacity) {
+        cache = new HashMap<>();
+        cap = capacity;
+        
+        head = new Node();
+        tail = new Node();
+        
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        Node node = cache.get(key);
+        
+        if(node == null) {
+            return -1;
+        }else {
+            moveToFront(node);
+            return node.value;
+        }
+    }
+    
+    public void put(int key, int value) {
+        Node node = cache.get(key);
+        
+        if(node == null) {//doesnt exists in cache
+            Node newNode = new Node();
+            newNode.key = key;
+            newNode.value = value;
+            
+            if(cache.size() == cap) {
+                Node LRU_Node = tail.prev;
+                cache.remove(LRU_Node.key);
+                removeNode(LRU_Node);
+            }
+            
+            cache.put(key, newNode);
+            addNode(newNode);
+        }else {
+            node.value = value;
+            moveToFront(node);
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
