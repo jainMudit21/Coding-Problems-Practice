@@ -1,0 +1,35 @@
+URL: https://leetcode.com/problems/avoid-flood-in-the-city/
+
+
+class Solution {
+    public int[] avoidFlood(int[] rains) {
+        
+        HashMap<Integer, Integer> map = new HashMap<>();//value -> index of occurence
+        TreeSet<Integer> dry = new TreeSet<>();
+        
+        int[] ans = new int[rains.length];
+        Arrays.fill(ans, -1);
+        
+        for(int i = 0; i < rains.length; i++)
+            if(rains[i] == 0)
+                ans[i] = 1;
+        
+        for(int i = 0; i < rains.length; i++)
+            if(rains[i] > 0) //rainy day
+                if(map.containsKey(rains[i])) {
+                    Integer zero = dry.higher(map.get(rains[i]));
+                    if(zero == null)
+                        return new int[0];
+                    
+                    ans[zero] = rains[i];
+                    map.put(rains[i], i);
+                    dry.remove(zero);
+                    
+                } else
+                    map.put(rains[i], i);
+            else //dry day
+                dry.add(i);
+
+        return ans;
+    }
+}
