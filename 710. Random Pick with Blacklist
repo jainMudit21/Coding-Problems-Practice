@@ -1,0 +1,43 @@
+URL: https://leetcode.com/problems/random-pick-with-blacklist/
+
+
+class Solution {
+
+    HashMap<Integer, Integer> map;
+    Random r;
+    int top;
+    public Solution(int n, int[] blacklist) {
+        map = new HashMap<>();
+        r = new Random();
+        top = n - blacklist.length;
+        
+        HashSet<Integer> hs = new HashSet<>();
+        for(int b: blacklist)
+            hs.add(b);
+        
+        n--; //0 to n-1
+        for(int i=0; i < blacklist.length; i++) {//loop for every blacklist number
+            if(top > blacklist[i]) {//processing blacklist numbers above top only
+                while(hs.contains(n))
+                    n--;
+                map.put(blacklist[i], n);
+                n--;
+            }
+        }
+    }
+    
+    public int pick() {
+        int randIdx = r.nextInt(top); //top exlusive, i.e. top = 15, then rand from 0 - 14
+        
+        if(map.containsKey(randIdx))
+            return map.get(randIdx);
+        
+        return randIdx;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(n, blacklist);
+ * int param_1 = obj.pick();
+ */
