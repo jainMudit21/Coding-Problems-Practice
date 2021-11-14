@@ -1,0 +1,23 @@
+URL: https://leetcode.com/problems/brick-wall/
+
+class Solution {
+    public int leastBricks(List<List<Integer>> wall) {
+        //minimizing number of passing through bricks means maximizing number of passing through splits. How to check for splits? Ans: Prefix sum.
+        
+        HashMap<Integer, Integer> map = new HashMap<>();//index -> split count at that index
+        
+        int max = 0;
+        for(List<Integer> list: wall) {
+            int sum = 0;
+            for(int i=0; i < list.size() - 1; i++) {
+                
+                sum += list.get(i);
+                map.put(sum, map.getOrDefault(sum, 0) + 1);
+                
+                max = Math.max(max, map.get(sum));
+            }
+        }
+        
+        return wall.size() - max;
+    }
+}
