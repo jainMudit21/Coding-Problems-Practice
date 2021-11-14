@@ -1,0 +1,41 @@
+URL: https://leetcode.com/problems/line-reflection/
+
+
+class Solution {
+    public boolean isReflected(int[][] points) {
+        
+        HashMap<Long, Long> map = new HashMap<>();
+        long xmin = Integer.MAX_VALUE;
+        long xmax = Integer.MIN_VALUE;
+        
+        for(int[] pt: points) {
+            long x = pt[0];
+            long y = pt[1];
+            
+            xmin = Math.min(xmin, x);
+            xmax = Math.max(xmax, x);
+            
+            long hash = x * 100000000 + y;
+            
+            map.put(hash, 1L);
+        }
+        
+        long mirr = xmin + xmax; //although mirror would be at (xmin+xmax)/2, but we take mirr as mirr * 2 to avoid decimal and to make calculation easy in next step.
+        
+        for(int[] pt: points) {
+            long x = pt[0];
+            long y = pt[1];
+            
+            long ximg = mirr - x;
+            long yimg = y;
+            
+            long hash = ximg * 100000000 + yimg;
+            
+            if(map.containsKey(hash) == false) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
