@@ -1,0 +1,58 @@
+URL: https://leetcode.com/problems/encode-and-decode-tinyurl/
+
+public class Codec {
+
+    HashMap<String, String> map = new HashMap<>();
+    // Encodes a URL to a shortened URL.
+    public String encode(String longUrl) {
+        StringBuilder sb = new StringBuilder();
+        sb.append((char)((int)(Math.random() * 100)));
+        while(map.containsKey(sb.toString()) == true) {
+            sb.append((char)((int)(Math.random() * 100)));
+        }
+        map.put(sb.toString(), longUrl);
+        
+        return sb.toString();
+    }
+
+    // Decodes a shortened URL to its original URL.
+    public String decode(String shortUrl) {
+        return map.get(shortUrl);
+    }
+}
+
+
+//Solution 2: choosing chars from char set and creating a short url of fixed length
+
+public class Codec {
+
+    private static final String BASE_TINY_URL = "http://tinyurl.com/";
+    private static final String CHAR_SET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    private final Map<String, String> shortUrlToLongUrl = new HashMap<>();
+    // private final Map<String, String> longUrlToShortUrl = new HashMap<>();
+
+    public String encode(String longUrl) {
+        
+        String shortUrl = randomString();
+        while(shortUrlToLongUrl.containsKey(shortUrl) == true) {
+            shortUrl = randomString();
+        }
+        shortUrl = BASE_TINY_URL + shortUrl;
+        shortUrlToLongUrl.put(shortUrl, longUrl);
+        return shortUrl;
+    }
+
+    public String decode(String shortUrl) {
+        return shortUrlToLongUrl.get(shortUrl);
+    }
+
+    private static String randomString() {
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            final int randIdx = (int) (Math.random() * CHAR_SET.length());
+            builder.append(CHAR_SET.charAt(randIdx));
+        }
+        return builder.toString();
+    }
+}
