@@ -1,0 +1,50 @@
+URL: https://leetcode.com/problems/diagonal-traverse/
+
+
+class Solution {
+    public int[] findDiagonalOrder(int[][] mat) {
+        if(mat == null || mat.length == 0)
+            return new int[0];
+        
+        int i=0,j=0;
+        
+        int ans[] = new int[mat.length * mat[0].length];
+        int k = 0;
+        while(true) {
+            
+            while(i >=0 && j < mat[0].length) {
+                ans[k++] = mat[i][j];
+                i--;
+                j++;
+            }
+            //coming back to last element
+            i++;j--;
+            
+            if(j + 1 != mat[0].length)
+                j++;
+            else if(i + 1 != mat.length)
+                i++;
+            else
+                break;
+            
+            
+            while(i < mat.length && j >= 0) {
+                ans[k++] = mat[i][j];
+                i++;
+                j--;
+            }
+            //coming back
+            i--;j++;
+            
+            if(i + 1 != mat.length)
+                i++;
+            else if(j + 1 != mat[0].length)
+                j++;
+            else
+                break;
+            
+        }
+        
+        return ans;
+    }
+}
