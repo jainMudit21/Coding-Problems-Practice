@@ -3,26 +3,18 @@ URL of problem: https://leetcode.com/problems/k-closest-points-to-origin/
 
 class Solution {
     public int[][] kClosest(int[][] points, int k) {
-        
         int ans[][] = new int[k][2];
-        
         PriorityQueue<Pair> pq = new PriorityQueue<Pair>(points.length, new sortbyLen());
-        
         for(int i = 0; i < points.length; i++) {
             long len = points[i][0]*points[i][0] + points[i][1]*points[i][1];
-            
             Pair pair = new Pair(len, points[i][0], points[i][1]);
             pq.add(pair);
         }
-        
-        
-        
         for(int i = 0; i < k; i++) {
             Pair dist = pq.poll();
             ans[i][0] = dist.f;
             ans[i][1] = dist.s;
         }
-        
         return ans;
     }
     
@@ -42,4 +34,78 @@ class Solution {
             return (int)p1.len - (int)p2.len;
         }
     }
+}
+
+
+
+//Avg case O(n)
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        int n = points.length;
+        int ans[][] = new int[k][2];
+        Node arr[] = new Node[points.length];
+        
+        for(int i = 0; i< points.length; i++) {
+            int len = points[i][0]*points[i][0] + points[i][1]*points[i][1];
+            Node node = new Node(len, i);
+            arr[i] = node;
+        }
+        
+        quicksort(arr, 0, n-1, k);
+        
+        for(int i = 0; i < k; i++) {
+            ans[i][0] = points[arr[i].i][0];
+            ans[i][1] = points[arr[i].i][1];
+        }
+        
+        return ans;
+        
+    }
+    
+    public void quicksort(Node arr[], int l, int r, int k) {
+        if(l >= r)
+            return;
+        
+        int left = l;
+        int right = r;
+        int mid = (l + r) /2;
+        // int pivot = (int)(Math.random()) * (r-l);
+        // pivot += l;
+        int ele = arr[mid].val; //make it random
+        while(left <= right) {
+            while(arr[left].val < ele)
+                left++;
+            while(arr[right].val > ele)
+                right--;
+            if(left < right) {
+               swap(arr, left, right);
+                left++;
+                right--;
+            }
+        }
+        //here left is partition index
+        
+        if(left == k)  return;
+
+        if(left < k)
+            quicksort(arr, left, r, k);
+        else
+            quicksort(arr, l, left-1, k);
+    }
+    
+    public void swap(Node arr[], int l, int r) {
+        Node temp = arr[l];
+        arr[l] = arr[r];
+        arr[r] = temp;
+    }
+    
+    class Node {
+        int val;
+        int i;
+        
+        Node(int val, int i) {
+            this.val = val;
+        }
+    }
+
 }
