@@ -1,0 +1,39 @@
+URL: https://leetcode.com/problems/expression-add-operators/
+
+class Solution {
+    public List<String> addOperators(String num, int target) {
+        List<String> expressions = new LinkedList<>();
+        if(num.isEmpty())
+            return expressions;
+        evaluation(num, target, 0, 0, 0, 0, "", expressions);
+        return expressions;
+    }
+    
+    private void evaluation(String num, int target, int index, long prevOperand, long curOperand, long val, String temp, List<String> expr) {
+        
+        if(num.length() == index) {
+            if(target == val && curOperand == 0) {
+                expr.add(temp);
+            }
+            return;
+        }
+        
+        curOperand = curOperand * 10 + num.charAt(index) - '0';
+        
+        //no operation just append and make it combined integer
+        if(curOperand > 0) {
+            evaluation(num, target, index + 1, prevOperand, curOperand, val, temp, expr);
+        }
+        
+        if(temp.isEmpty()) {
+            evaluation(num, target, index + 1, curOperand, 0, val + curOperand, temp + curOperand, expr);
+            return;
+        }
+        
+        evaluation(num, target, index + 1, curOperand, 0, val + curOperand, temp + "+" + curOperand, expr);
+        
+        evaluation(num, target, index + 1, 0 - curOperand, 0, val - curOperand, temp + "-" + curOperand, expr);
+        
+        evaluation(num, target, index + 1, prevOperand * curOperand, 0, val - prevOperand + prevOperand * curOperand, temp + "*" + curOperand, expr);
+    }
+}
