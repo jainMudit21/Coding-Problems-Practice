@@ -1,0 +1,48 @@
+Problem: https://www.geeksforgeeks.org/problems/aggressive-cows/0
+
+Solution:
+
+// User function Template for Java
+class Solution {
+    public static int aggressiveCows(int[] stalls, int k) {
+        Arrays.sort(stalls);
+        int minDist = 1;
+        int maxDist = stalls[stalls.length - 1] - stalls[0];
+        int answer = 0;
+        while(minDist <= maxDist) {
+            int possibility = minDist + (maxDist - minDist) / 2;
+
+            if(amIRight(stalls, possibility, k)) {
+                //hooray. Let me try next better answer
+                answer = possibility;
+                minDist = possibility + 1;
+            } else {
+                //nope. thought too much. would try less.
+                maxDist = possibility - 1;
+            }
+        }
+        
+        return answer;
+    }
+    
+    private static boolean amIRight(int arr[], int tryMe, int totalCows) {
+        int countOfCows = 1;
+        int lastCowPlacedIdx = 0;
+        
+        for(int i=1;i<arr.length;i++) {
+            if(arr[i] - arr[lastCowPlacedIdx] >= tryMe) {
+                //yep. we can place the cow here
+                countOfCows++;
+                lastCowPlacedIdx = i;
+            }
+            if (countOfCows >= totalCows) {
+                //i have placed all cows. no need to place more imaginary cows.
+                return true;
+            }
+        }
+        
+        //tried everything. couldn't place them. you can try shorter distances.
+        return false;
+    }
+    
+}
