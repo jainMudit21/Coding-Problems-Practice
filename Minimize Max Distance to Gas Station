@@ -1,0 +1,48 @@
+Question: https://www.geeksforgeeks.org/problems/minimize-max-distance-to-gas-station/1
+
+Solution:
+
+
+class Solution {
+    public static double findSmallestMaxDist(int arr[], int k) {
+        // code here
+        
+        double low = 0;
+        double high = 0;
+        for(int i=0; i < arr.length-1; i++) {
+            high = Math.max(high, arr[i+1] - arr[i]);
+        }
+        double diff = 1e-6;
+        while ((high - low) > diff) {
+            double mid = (low + high) / 2.0;
+            int count = numOfStationsReqd(arr, mid);
+            
+            if(count > k) {
+                low = mid;
+            } else {
+                high = mid;
+            }
+        }
+        
+        return high;
+    }
+    
+    private static int numOfStationsReqd(int arr[], double dist) {
+        int count = 0;
+        
+        for(int i=1;i < arr.length; i++) {
+            int distanceBetweenStations = arr[i] - arr[i-1];
+            int numOfStationsInBetween = (int) (distanceBetweenStations / dist);
+            if ((arr[i] - arr[i-1]) == (dist * numOfStationsInBetween)) {
+                numOfStationsInBetween--;
+            }
+            
+            count += numOfStationsInBetween;
+        }
+        
+        return count;
+    }
+}
+
+
+Solution explanation video: https://www.youtube.com/watch?v=kMSBvlZ-_HA
